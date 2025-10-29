@@ -8,6 +8,7 @@ export const TextGenerateEffect = ({
   className,
   filter = true,
   duration = 0.5,
+  staggerDelay,
   byChar = false,
   glow = false,
   glowColor = "rgba(255,255,255,0.9)",
@@ -16,6 +17,7 @@ export const TextGenerateEffect = ({
   className?: string;
   filter?: boolean;
   duration?: number;
+  staggerDelay?: number;
   byChar?: boolean;
   glow?: boolean;
   glowColor?: string;
@@ -32,10 +34,12 @@ export const TextGenerateEffect = ({
       },
       {
         duration: duration ? duration : 1,
-        delay: stagger(byChar ? 0.05 : 0.2),
+        delay: stagger(
+          byChar ? (staggerDelay ?? 0.03) : (staggerDelay ?? 0.12)
+        ),
       }
     );
-  }, [scope.current, byChar, duration, filter]);
+  }, [scope.current, byChar, duration, filter, staggerDelay]);
 
   const renderWords = () => {
     return (

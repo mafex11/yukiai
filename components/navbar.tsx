@@ -21,7 +21,7 @@ export default function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <div className="flex items-center justify-between">
+        <div className="grid grid-cols-3 items-center">
           {/* Brand/Logo */}
           <motion.div 
             className="flex items-center gap-3"
@@ -42,26 +42,26 @@ export default function Navbar() {
                 className="text-white"
               />
             </motion.div>
-            <motion.div 
-              className="text-white"
+            <motion.span 
+              className="text-white mb-4"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
             >
               <TextGenerateEffect
                 words="YukiAI"
-                className="font-thin text-xl m-0"
+                className="!font-normal text-xl !m-0 "
                 byChar
                 glow
                 duration={0.35}
                 glowColor="rgba(255,180,120,0.9)"
               />
-            </motion.div>
+            </motion.span>
           </motion.div>
 
           {/* Navigation Links */}
           <motion.div 
-            className="hidden md:flex flex-1 items-center justify-center gap-8 font-thin text-lg mb-2"
+            className="hidden md:flex flex-1 items-center justify-center gap-10 font-thin text-lg mb-2"
             initial={{ y: -30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.8 }}
@@ -79,7 +79,7 @@ export default function Navbar() {
               >
                 <TextGenerateEffect
                   words={link}
-                  className="!font-thin text-lg sm:text-lg !m-2"
+                  className="!font-normal text-lg sm:text-lg !m-2"
                   byChar
                   glow
                   duration={0.35}
@@ -91,7 +91,7 @@ export default function Navbar() {
 
           {/* CTA Button */}
           <motion.button 
-            className="bg-zinc-900 text-white px-6 py-2 rounded-full transition-colors font-thin text-lg"
+            className="bg-zinc-900 text-white px-6 py-2 rounded-full transition-colors font-thin text-lg justify-self-end"
             initial={{ x: 50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.2 }}
@@ -103,7 +103,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <motion.button 
-            className="md:hidden text-white/80 hover:text-white font-thin"
+            className="md:hidden text-white/80 hover:text-white font-thin justify-self-end"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.4 }}

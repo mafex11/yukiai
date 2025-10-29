@@ -1,19 +1,50 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Hero() {
-  // For zoom effect on image2.png only
   const { scrollY } = useScroll();
   const imageScale = useTransform(scrollY, [0, 300], [1, 1.2]);
   const imageOpacity = useTransform(scrollY, [0, 200], [1, 0.8]);
   const [email, setEmail] = useState("");
+  const rotatingPhrases = [
+    "help me with this",
+    "email bob to ask for leave tomorrow",
+    "turn on bluetooth and connect to airpods",
+    "send meeting link to sam on whatsapp",
+    "set a reminder to call mom at 7pm",
+    "play my workout playlist on spotify",
+    "close all apps except vscode",
+    "mute system volume for 30 minutes",
+    "take a screenshot and save it to desktop",
+    "start screen recording and open powerpoint",
+    "read my unread emails",
+    "open github and check notifications",
+    "show cpu and memory usage",
+    "lock the system after 10 minutes",
+    "open latest project folder in vscode",
+    "delete temporary files and clear cache",
+    "start chrome in incognito mode",
+    "join my next calendar meeting",
+    "turn on dark mode",
+    "enable airplane mode",
+    "restart system after update completes",
+  ];
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setPhraseIndex((i) => (i + 1) % rotatingPhrases.length);
+    }, 2000);
+    return () => clearInterval(id);
+  }, []);
+  const displayText = `"Yuki, ${rotatingPhrases[phraseIndex]}"`;
 
+  
   return (
     <div className="min-h-screen w-full relative bg-black">
       <div
@@ -39,13 +70,26 @@ export default function Hero() {
                   height={80}
                   className="w-10 h-10 sm:w-14 sm:h-14 mt-2"
                 /> */}
-                <TextGenerateEffect
-                  words='"Yuki, help me with this"'
-                  className="text-xl sm:text-6xl lg:text-8xl font-normal text-white text-center px-4"
-                  byChar
-                  glow
-                  glowColor="rgba(255,180,120,0.9)"
-                />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={displayText}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                  >
+                    <TextGenerateEffect
+                      words={displayText}
+                      className="text-xl sm:text-6xl lg:text-8xl font-normal text-white text-center px-4"
+                      duration={0.5}
+                      staggerDelay={0.015}
+                      byChar
+                      glow
+                      glowColor="rgba(255,180,120,0.9)"
+                      
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </div>
             <h1 className="text-2xl sm:text-4xl lg:text-5xl font-light text-white text-center px-4 mb-20">
@@ -80,7 +124,7 @@ export default function Hero() {
             style={{ scale: imageScale, opacity: imageOpacity }}
           >
             <Image
-              src="/image2.png"
+              src="/image3.png"
               alt="Yuki AI"
               width={1800}
               height={1000}
