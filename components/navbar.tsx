@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
 export default function Navbar() {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 100], [0, -20]);
-  const opacity = useTransform(scrollY, [0, 100], [1, 0.8]);
+  const opacity = useTransform(scrollY, [0, 100], [1, 1]);
   const scale = useTransform(scrollY, [0, 100], [1, 0.95]);
 
   return (
@@ -15,7 +16,7 @@ export default function Navbar() {
       style={{ y, opacity, scale }}
     >
       <motion.div 
-        className="bg-zinc-950/30 backdrop-blur-xl rounded-full border border-zinc-800/50 shadow-2xl px-6 py-4 mx-4"
+        className="bg-zinc-950/50 backdrop-blur-xl rounded-full border border-zinc-800/50 shadow-2xl/30 shadow-orange-950  px-6 py-4 mx-4"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -34,26 +35,33 @@ export default function Navbar() {
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <Image
-                src="/logo.svg"
+                src="/logowithoutbg.svg"
                 alt="Yuki AI Logo"
                 width={30}
                 height={30}
                 className="text-white"
               />
             </motion.div>
-            <motion.span 
-              className="text-white font-thin text-lg"
+            <motion.div 
+              className="text-white"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
             >
-              Yuki AI
-            </motion.span>
+              <TextGenerateEffect
+                words="YukiAI"
+                className="font-thin text-xl m-0"
+                byChar
+                glow
+                duration={0.35}
+                glowColor="rgba(255,180,120,0.9)"
+              />
+            </motion.div>
           </motion.div>
 
           {/* Navigation Links */}
           <motion.div 
-            className="hidden md:flex items-center gap-8 font-thin"
+            className="hidden md:flex flex-1 items-center justify-center gap-8 font-thin text-lg mb-2"
             initial={{ y: -30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.8 }}
@@ -69,14 +77,21 @@ export default function Navbar() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {link}
+                <TextGenerateEffect
+                  words={link}
+                  className="!font-thin text-lg sm:text-lg !m-2"
+                  byChar
+                  glow
+                  duration={0.35}
+                  glowColor="rgba(255,180,120,0.9)"
+                />
               </motion.a>
             ))}
           </motion.div>
 
           {/* CTA Button */}
           <motion.button 
-            className="bg-zinc-800 hover:bg-zinc-700 text-white px-6 py-2 rounded-xl transition-colors font-thin"
+            className="bg-zinc-900 text-white px-6 py-2 rounded-full transition-colors font-thin text-lg"
             initial={{ x: 50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.2 }}
