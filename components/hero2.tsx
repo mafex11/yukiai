@@ -6,8 +6,13 @@ import { Button } from "@/components/ui/button";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
+import Features, { Feature } from "./features";
 
-export default function Hero() {
+type HeroProps = {
+  featuresOnOpen?: (feature: Feature) => void;
+};
+
+export default function Hero({ featuresOnOpen }: HeroProps) {
   const { scrollY } = useScroll();
   const imageScale = useTransform(scrollY, [0, 300], [1, 1.2]);
   const imageOpacity = useTransform(scrollY, [0, 200], [1, 0.8]);
@@ -46,20 +51,14 @@ export default function Hero() {
 
   
   return (
-    <div className="min-h-screen w-full relative bg-black overflow-x-hidden">
+    <div className="min-h-screen w-full relative bg-zinc-950 overflow-x-hidden">
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 "
         style={{
-          background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 80, 120, 0.25), transparent 70%), #000000",
+          background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 80, 120, 0.25), transparent 100%), #100000",
         }}
       />
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 120% 90% at 50% 100%, rgba(255, 80, 120, 0.18), transparent 80%)",
-        }}
-      />
+      
 
       <main className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-16 py-66 ">
         <div className="flex flex-col items-center gap-8 ">
@@ -124,22 +123,9 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          <motion.div
-            className="relative w-full max-w-6xl mx-auto p-4 bg-zinc-950/90 border border-white/10 rounded-3xl mt-10"
-            initial={{ scale: 0.85, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            style={{ scale: imageScale, opacity: imageOpacity }}
-          >
-            <Image
-              src="/image3.png"
-              alt="Yuki AI"
-              width={1800}
-              height={1000}
-              className="w-full h-auto rounded-3xl shadow-[0_0_40px_0_rgba(255,140,0,0.2)]"
-              style={{ maxWidth: '100%', height: 'auto' }}
-            />
-          </motion.div>
+          <div className="w-full mt-10">
+            <Features onOpen={featuresOnOpen} />
+          </div>
         </div>
       </main>
     </div>

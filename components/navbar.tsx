@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { ArrowRightIcon } from "lucide-react";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
 export default function Navbar() {
   const { scrollY } = useScroll();
@@ -43,25 +45,22 @@ export default function Navbar() {
               />
             </motion.div>
             <motion.span 
-              className="text-white mb-4"
+              className="text-white"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
+              style={{
+                textShadow:
+                  "0 0 6px rgba(255,140,0,0.75), 0 0 12px rgba(255,140,0,0.6), 0 0 20px rgba(255,140,0,0.5), 0 0 32px rgba(255,140,0,0.35)",
+              }}
             >
-              <TextGenerateEffect
-                words="YukiAI"
-                className="!font-normal text-xl !m-0 "
-                byChar
-                glow
-                duration={0.35}
-                glowColor="rgba(255,180,120,0.9)"
-              />
+              <span className="font-normal text-xl">YukiAI</span>
             </motion.span>
           </motion.div>
 
           {/* Navigation Links */}
           <motion.div 
-            className="hidden md:flex flex-1 items-center justify-center gap-10 font-thin text-lg mb-2"
+            className="hidden md:flex flex-1 items-center justify-center gap-10 font-thin text-xl"
             initial={{ y: -30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.8 }}
@@ -77,29 +76,41 @@ export default function Navbar() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <TextGenerateEffect
-                  words={link}
-                  className="!font-normal text-lg sm:text-lg !m-2"
-                  byChar
-                  glow
-                  duration={0.35}
-                  glowColor="rgba(255,180,120,0.9)"
-                />
+                <span
+                  className="font-normal m-2"
+                  style={{
+                    textShadow:
+                      "0 0 4px rgba(255,140,0,0.35), 0 0 10px rgba(255,140,0,0.25), 0 0 16px rgba(255,140,0,0.18)",
+                  }}
+                >
+                  {link}
+                </span>
               </motion.a>
             ))}
           </motion.div>
 
           {/* CTA Button */}
-          <motion.button 
-            className="bg-zinc-900 text-white px-6 py-2 rounded-full transition-colors font-thin text-lg justify-self-end"
+          <motion.div
+            className="justify-self-end"
             initial={{ x: 50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            whileHover={{ scale: 1.05, backgroundColor: "rgb(63 63 70)" }}
-            whileTap={{ scale: 0.95 }}
           >
-            Get Started
-          </motion.button>
+            <HoverBorderGradient as="button">
+              <div className="flex items-center gap-2">
+                <p
+                  className="text-xl"
+                  style={{
+                    textShadow:
+                      "0 0 6px rgba(255,140,0,0.75), 0 0 12px rgba(255,140,0,0.6), 0 0 20px rgba(255,140,0,0.5), 0 0 32px rgba(255,140,0,0.35)",
+                  }}
+                >
+                  Plans and Pricing
+                </p>
+                <ArrowRightIcon className="w-4 h-4" />
+              </div>
+            </HoverBorderGradient>
+          </motion.div>
 
           {/* Mobile Menu Button */}
           <motion.button 

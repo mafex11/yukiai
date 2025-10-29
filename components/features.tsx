@@ -11,7 +11,7 @@ import { FocusPointIcon } from "@hugeicons/core-free-icons";
 import { AppleVisionProIcon } from "@hugeicons/core-free-icons";
 import { Brain02Icon } from "@hugeicons/core-free-icons";
 
-type Feature = {
+export type Feature = {
   title: string;
   description: string;
   src?: string;
@@ -68,16 +68,23 @@ const features: Feature[] = [
   },
 ];
 
-export default function Features() {
+type FeaturesProps = {
+  onOpen?: (feature: Feature) => void;
+};
+
+export default function Features({ onOpen }: FeaturesProps) {
   const [active, setActive] = useState<Feature | boolean | null>(null);
   const ref = useRef<HTMLDivElement>(null!);
+  const listRef = useRef<HTMLUListElement>(null!);
+  const [isHoveringList, setIsHoveringList] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const id = useId();
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") setActive(false);
     }
-    if (active && typeof active === "object") {
+    if (!onOpen && active && typeof active === "object") {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -87,6 +94,54 @@ export default function Features() {
   }, [active]);
 
   useOutsideClick(ref, () => setActive(null));
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    let raf = 0;
+    const handleScroll = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const containerRect = el.getBoundingClientRect();
+        const containerCenter = containerRect.left + containerRect.width / 2;
+        let bestIdx = 0;
+        let bestDist = Number.POSITIVE_INFINITY;
+        const items = Array.from(el.querySelectorAll('li')) as HTMLElement[];
+        items.forEach((li, i) => {
+          const r = li.getBoundingClientRect();
+          const liCenter = r.left + r.width / 2;
+          const d = Math.abs(liCenter - containerCenter);
+          if (d < bestDist) {
+            bestDist = d;
+            bestIdx = i;
+          }
+        });
+        setCurrentIndex(bestIdx);
+      });
+    };
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => {
+      el.removeEventListener('scroll', handleScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const interval = setInterval(() => {
+      if (isHoveringList) return;
+      if (active && typeof active === "object") return;
+      const atEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth - 4;
+      if (atEnd) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: 360, behavior: 'smooth' });
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [isHoveringList, active]);
 
   const renderIcon = (index: number) => {
     const iconCommon = { size: 24, color: "white" } as const;
@@ -115,7 +170,14 @@ export default function Features() {
   };
 
   return (
-    <div className="w-full bg-zinc-900 py-24">
+    <div className="w-full relative bg-black py-24 overflow-hidden">
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 120% 90% at 50% 100%, rgba(255, 80, 120, 0.18), transparent 80%)",
+        }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-16"
@@ -128,6 +190,8 @@ export default function Features() {
           <p className="text-white/70 text-lg max-w-2xl mx-auto">Everything you need to automate and control your Windows device</p>
         </motion.div>
 
+        {!onOpen && (
+          <>
         <AnimatePresence>
           {active && typeof active === "object" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/40 h-full w-full z-10" />
@@ -140,53 +204,104 @@ export default function Features() {
               <motion.div
                 layoutId={`card-${active.title}-${id}`}
                 ref={ref}
-                className="w-full max-w-[560px] h-full md:h-fit md:max-h-[90%] flex flex-col bg-zinc-950 border border-white/10 sm:rounded-3xl overflow-hidden"
+                className="w-[96%] max-w-[840px] h-full md:h-fit md:max-h-[92%] flex flex-col bg-zinc-950/95 backdrop-blur-xl border border-white/10 sm:rounded-3xl overflow-hidden shadow-2xl"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
               >
-                <motion.div layout className="w-full h-56 bg-zinc-900/50">
-                  <img
-                    src={active.src ?? "/image.png"}
-                    alt={active.title}
-                    className="w-full h-full object-cover object-center"
-                  />
+                <motion.div layout className="w-full bg-zinc-900/50 p-4 md:p-6">
+                  <div className="relative w-full aspect-video rounded-xl overflow-hidden">
+                    <img
+                      src={active.src ?? "/image.png"}
+                      alt={active.title}
+                      className="absolute inset-0 w-full h-full object-cover object-center"
+                    />
+                  </div>
                 </motion.div>
-                <div className="p-6 flex items-start gap-4 border-b border-white/10">
-                  <div className="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center">
-                    {renderIcon(features.findIndex(f => f.title === active.title))}
+                <div className="flex flex-col">
+                  <div className="p-6 md:p-8 flex items-start gap-4 border-b border-white/10">
+                    <div className="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center">
+                      {renderIcon(features.findIndex(f => f.title === active.title))}
+                    </div>
+                    <div className="flex-1">
+                      <motion.h3 layoutId={`title-${active.title}-${id}`} className="text-white text-2xl font-medium leading-tight">{active.title}</motion.h3>
+                      <motion.p layoutId={`description-${active.description}-${id}`} className="text-white/70 text-base mt-2">{active.description}</motion.p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <motion.h3 layoutId={`title-${active.title}-${id}`} className="text-white text-lg font-medium">{active.title}</motion.h3>
-                    <motion.p layoutId={`description-${active.description}-${id}`} className="text-white/60 text-sm">{active.description}</motion.p>
+                  <div className="p-6 md:p-8">
+                    <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-white/80 text-sm md:text-base leading-relaxed">
+                      {active.description}
+                    </motion.div>
                   </div>
-                  <motion.button onClick={() => setActive(null)} className="ml-auto text-white/80 hover:text-white" aria-label="Close">×</motion.button>
-                </div>
-                <div className="p-6">
-                  <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-white/70 text-sm leading-relaxed">
-                    {active.description}
-                  </motion.div>
                 </div>
               </motion.div>
             </div>
           ) : null}
         </AnimatePresence>
+          </>
+        )}
 
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {features.map((card, index) => (
-            <motion.li
-              layoutId={`card-${card.title}-${id}`}
-              key={`card-${card.title}-${id}`}
-              onClick={() => setActive({ ...card, src: featureImages[index] })}
-              className="bg-zinc-950/60 backdrop-blur-xl rounded-2xl p-5 border border-white/10 hover:border-white/20 transition-colors duration-300 cursor-pointer"
-              whileHover={{ scale: 1.02, y: -2 }}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center">{renderIcon(index)}</div>
-                <div className="flex-1 min-w-0">
-                  <motion.h3 layoutId={`title-${card.title}-${id}`} className="text-white font-medium text-base truncate">{card.title}</motion.h3>
+        <motion.div
+          className="relative w-full overflow-visible px-4 sm:px-6 lg:px-8"
+          initial={false}
+          animate={{ opacity: active && typeof active === "object" ? 0.6 : 1 }}
+          transition={{ duration: 0.2 }}
+          onMouseEnter={() => setIsHoveringList(true)}
+          onMouseLeave={() => setIsHoveringList(false)}
+        >
+          <ul
+            ref={listRef}
+            className="relative flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 scroll-smooth pt-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            style={{ overflowY: 'visible' }}
+          >
+            {features.map((card, index) => (
+              <li
+                key={`card-${card.title}-${id}`}
+                onClick={() =>
+                  onOpen ? onOpen({ ...card, src: featureImages[index] }) : setActive({ ...card, src: featureImages[index] })
+                }
+                className="relative z-0 min-w-[85%] md:min-w-[60%] lg:min-w-[40%] snap-center bg-zinc-950/60 backdrop-blur-xl rounded-3xl p-2 border border-white/10 cursor-pointer h-[400px] md:h-[400px] lg:h-[400px]"
+                style={{ transformOrigin: 'top center' }}
+              >
+                <div className="relative w-full h-40 md:h-48 lg:h-56 rounded-2xl overflow-hidden mb-5 bg-zinc-900/50">
+                  <img src={featureImages[index]} alt={card.title} className="w-full h-full object-cover object-center" />
                 </div>
-              </div>
-            </motion.li>
-          ))}
-        </ul>
+                <div className="flex items-start gap-4 mt-10 mb-10 p-2">
+                  <div className="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0 ">{renderIcon(index)}</div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-white font-medium text-lg md:text-xl truncate">{card.title}</h3>
+                    <p className="mt-2 text-white/60 text-sm line-clamp-2 md:line-clamp-3">{card.description}</p>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-2 flex items-center justify-center gap-2">
+            {features.map((_, i) => (
+              <span
+                key={`dot-${i}`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-6 bg-white' : 'w-2 bg-white/30'}`}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            aria-label="Scroll left"
+            onClick={() => listRef.current?.scrollBy({ left: -400, behavior: 'smooth' })}
+            className="hidden md:flex items-center justify-center absolute left-1 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-zinc-800/60 hover:bg-zinc-700/70 border border-white/10 backdrop-blur-md text-white z-10"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            aria-label="Scroll right"
+            onClick={() => listRef.current?.scrollBy({ left: 400, behavior: 'smooth' })}
+            className="hidden md:flex items-center justify-center absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-zinc-800/60 hover:bg-zinc-700/70 border border-white/10 backdrop-blur-md text-white z-10"
+          >
+            ›
+          </button>
+        </motion.div>
       </div>
     </div>
   );
