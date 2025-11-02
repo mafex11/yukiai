@@ -10,6 +10,7 @@ import { TaskDaily02Icon } from "@hugeicons/core-free-icons";
 import { FocusPointIcon } from "@hugeicons/core-free-icons";
 import { AppleVisionProIcon } from "@hugeicons/core-free-icons";
 import { Brain02Icon } from "@hugeicons/core-free-icons";
+import { ArrowRight02Icon, ArrowLeft02Icon } from "@hugeicons/core-free-icons";
 
 export type Feature = {
   title: string;
@@ -97,10 +98,20 @@ export default function Features({ onOpen }: FeaturesProps) {
   useOutsideClick(ref, () => setActive(null));
 
   useEffect(() => {
+    // Disable browser scroll restoration
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    
     const el = listRef.current;
     if (!el) return;
+    
+    // Reset scroll position immediately
+    el.scrollLeft = 0;
+    
     let raf = 0;
     let isScrolling = false;
+    let isInitializing = true;
     
     const handleScroll = () => {
       if (raf) cancelAnimationFrame(raf);
@@ -123,25 +134,29 @@ export default function Features({ onOpen }: FeaturesProps) {
         setCurrentIndex(originalIdx);
         setCenteredCardIndex(bestIdx);
         
-        // Infinite scroll handling
-        if (isScrolling) return;
+        // Infinite scroll handling - jump before reaching boundaries for seamless scroll
+        if (isScrolling || isInitializing) return;
         const firstCard = items[0];
         if (!firstCard) return;
         const cardWidth = firstCard.offsetWidth;
         const gap = 16;
         const cardAndGap = cardWidth + gap;
         const totalCardsWidth = features.length * cardAndGap;
+        const scrollLeft = el.scrollLeft;
         
-        // If scrolled past second set, jump back to first set
-        if (el.scrollLeft >= totalCardsWidth * 2 - 50) {
+        // If approaching the end of third set, jump to equivalent position in second set
+        // Jump when we're 1 card away from the end
+        if (scrollLeft >= totalCardsWidth * 2 - cardAndGap) {
           isScrolling = true;
-          el.scrollTo({ left: el.scrollLeft - totalCardsWidth, behavior: 'auto' });
+          const offset = scrollLeft - totalCardsWidth * 2;
+          el.scrollTo({ left: totalCardsWidth + offset, behavior: 'auto' });
           setTimeout(() => { isScrolling = false; }, 50);
         }
-        // If scrolled before first set, jump to second set
-        else if (el.scrollLeft <= 50) {
+        // If approaching the start of first set, jump to equivalent position in second set
+        // Jump when we're within 1 card of the start
+        else if (scrollLeft <= cardAndGap) {
           isScrolling = true;
-          el.scrollTo({ left: el.scrollLeft + totalCardsWidth, behavior: 'auto' });
+          el.scrollTo({ left: totalCardsWidth + scrollLeft, behavior: 'auto' });
           setTimeout(() => { isScrolling = false; }, 50);
         }
       });
@@ -149,7 +164,7 @@ export default function Features({ onOpen }: FeaturesProps) {
     
     el.addEventListener('scroll', handleScroll, { passive: true });
     
-    // Initialize scroll position to show middle card in center
+    // Initialize scroll position to show first card centered in middle set
     const initScroll = () => {
       const firstCard = el.querySelector('li') as HTMLElement;
       if (!firstCard) return;
@@ -157,16 +172,19 @@ export default function Features({ onOpen }: FeaturesProps) {
       const gap = 16;
       const cardAndGap = cardWidth + gap;
       const totalCardsWidth = features.length * cardAndGap;
-      // Start at second set, showing first card as center
-      el.scrollTo({ left: totalCardsWidth + cardAndGap, behavior: 'auto' });
+      // Start at first card of middle set (which is the first feature)
+      el.scrollTo({ left: totalCardsWidth, behavior: 'auto' });
+      isInitializing = false;
       handleScroll();
     };
     
-    setTimeout(initScroll, 100);
+    // Wait for layout to complete, then initialize
+    const timeoutId = setTimeout(initScroll, 150);
     
     return () => {
       el.removeEventListener('scroll', handleScroll);
       if (raf) cancelAnimationFrame(raf);
+      clearTimeout(timeoutId);
     };
   }, []);
 
@@ -176,11 +194,14 @@ export default function Features({ onOpen }: FeaturesProps) {
     const interval = setInterval(() => {
       if (isHoveringList) return;
       if (active && typeof active === "object") return;
+      
       const firstCard = el.querySelector('li') as HTMLElement;
       if (!firstCard) return;
       const cardWidth = firstCard.offsetWidth;
       const gap = 16;
       const cardAndGap = cardWidth + gap;
+      
+      // Scroll one card forward for smooth infinite scroll
       el.scrollBy({ left: cardAndGap, behavior: 'smooth' });
     }, 3000);
     return () => clearInterval(interval);
@@ -248,7 +269,7 @@ export default function Features({ onOpen }: FeaturesProps) {
             "radial-gradient(ellipse 120% 90% at 50% 100%, rgba(255, 80, 120, 0.18), transparent 80%)",
         }}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
@@ -335,14 +356,14 @@ export default function Features({ onOpen }: FeaturesProps) {
                   onClick={() =>
                     onOpen ? onOpen({ ...card, src: featureImages[originalIndex] }) : setActive({ ...card, src: featureImages[originalIndex] })
                   }
-                  className={`relative z-0 w-[calc((100%-4rem)/3)] shrink-0 snap-center bg-zinc-950/60 backdrop-blur-xl rounded-3xl p-4 md:p-6 border transition-all duration-300 cursor-pointer h-[480px] md:h-[520px] lg:h-[560px] ${
+                  className={`relative z-0 w-[28rem] shrink-0 snap-center bg-zinc-950/60 backdrop-blur-xl rounded-3xl p-4 md:p-6 border transition-all duration-300 cursor-pointer ${
                     isCenterCard
                       ? 'border-white/40 scale-105 bg-zinc-950/80 shadow-2xl z-10'
-                      : 'border-white/10 scale-100'
+                      : 'border-white/10 scale-100 opacity-75'
                   }`}
                   style={{ transformOrigin: 'center center' }}
                 >
-                  <div className="relative w-full h-48 md:h-56 lg:h-64 rounded-2xl overflow-hidden mb-6 bg-zinc-900/50">
+                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 bg-zinc-900/50">
                     <img src={featureImages[originalIndex]} alt={card.title} className="w-full h-full object-cover object-center" />
                   </div>
                   <div className="flex items-start gap-4 mt-6 mb-6 p-2">
@@ -384,9 +405,9 @@ export default function Features({ onOpen }: FeaturesProps) {
               const gap = 16;
               el.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
             }}
-            className="hidden md:flex items-center justify-center absolute left-1 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-zinc-800/60 hover:bg-zinc-700/70 border border-white/10 backdrop-blur-md text-white z-10"
+            className="hidden md:flex items-center justify-center absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-zinc-950/10 hover:bg-zinc-700/830 border border-white/40 backdrop-blur-sm text-white z-10 transition-all duration-300 hover:scale-110 "
           >
-            ‹
+            <HugeiconsIcon icon={ArrowLeft02Icon} size={30} />
           </button>
           <button
             type="button"
@@ -400,9 +421,9 @@ export default function Features({ onOpen }: FeaturesProps) {
               const gap = 16;
               el.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
             }}
-            className="hidden md:flex items-center justify-center absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-zinc-800/60 hover:bg-zinc-700/70 border border-white/10 backdrop-blur-md text-white z-10"
+            className="hidden md:flex items-center justify-center absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-zinc-950/10 hover:bg-zinc-700/830 border border-white/40 backdrop-blur-sm text-white z-10 transition-all duration-300 hover:scale-110"
           >
-            ›
+            <HugeiconsIcon icon={ArrowRight02Icon} size={30} />
           </button>
         </motion.div>
       </div>
