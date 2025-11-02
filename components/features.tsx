@@ -110,12 +110,15 @@ export default function Features({ onOpen }: FeaturesProps) {
     el.scrollLeft = 0;
     
     let raf = 0;
-    let isScrolling = false;
+    let isAdjusting = false;
     let isInitializing = true;
+    let lastScrollLeft = 0;
     
     const handleScroll = () => {
       if (raf) cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
+        if (isAdjusting || isInitializing) return;
+        
         const containerRect = el.getBoundingClientRect();
         const containerCenter = containerRect.left + containerRect.width / 2;
         let bestIdx = 0;
@@ -134,8 +137,7 @@ export default function Features({ onOpen }: FeaturesProps) {
         setCurrentIndex(originalIdx);
         setCenteredCardIndex(bestIdx);
         
-        // Infinite scroll handling - jump before reaching boundaries for seamless scroll
-        if (isScrolling || isInitializing) return;
+        // Infinite scroll handling
         const firstCard = items[0];
         if (!firstCard) return;
         const cardWidth = firstCard.offsetWidth;
@@ -144,20 +146,36 @@ export default function Features({ onOpen }: FeaturesProps) {
         const totalCardsWidth = features.length * cardAndGap;
         const scrollLeft = el.scrollLeft;
         
-        // If approaching the end of third set, jump to equivalent position in second set
-        // Jump when we're 1 card away from the end
-        if (scrollLeft >= totalCardsWidth * 2 - cardAndGap) {
-          isScrolling = true;
-          const offset = scrollLeft - totalCardsWidth * 2;
-          el.scrollTo({ left: totalCardsWidth + offset, behavior: 'auto' });
-          setTimeout(() => { isScrolling = false; }, 50);
+        // We maintain position in the middle set (from totalCardsWidth to totalCardsWidth * 2)
+        // When we cross boundaries, instantly jump to equivalent position in the middle set
+        const middleSetStart = totalCardsWidth;
+        const middleSetEnd = totalCardsWidth * 2;
+        const totalWidth = totalCardsWidth * 3;
+        
+        // Normalize scroll position to always be within the middle set
+        let normalizedScroll = scrollLeft;
+        let needsJump = false;
+        
+        // If we're in the first set, jump to equivalent in middle set
+        if (scrollLeft < middleSetStart) {
+          normalizedScroll = scrollLeft + middleSetStart;
+          needsJump = true;
         }
-        // If approaching the start of first set, jump to equivalent position in second set
-        // Jump when we're within 1 card of the start
-        else if (scrollLeft <= cardAndGap) {
-          isScrolling = true;
-          el.scrollTo({ left: totalCardsWidth + scrollLeft, behavior: 'auto' });
-          setTimeout(() => { isScrolling = false; }, 50);
+        // If we're in the third set, jump to equivalent in middle set
+        else if (scrollLeft >= middleSetEnd) {
+          normalizedScroll = scrollLeft - middleSetStart;
+          needsJump = true;
+        }
+        
+        if (needsJump) {
+          isAdjusting = true;
+          el.scrollLeft = normalizedScroll;
+          lastScrollLeft = normalizedScroll;
+          requestAnimationFrame(() => {
+            isAdjusting = false;
+          });
+        } else {
+          lastScrollLeft = scrollLeft;
         }
       });
     };
@@ -173,7 +191,8 @@ export default function Features({ onOpen }: FeaturesProps) {
       const cardAndGap = cardWidth + gap;
       const totalCardsWidth = features.length * cardAndGap;
       // Start at first card of middle set (which is the first feature)
-      el.scrollTo({ left: totalCardsWidth, behavior: 'auto' });
+      el.scrollLeft = totalCardsWidth;
+      lastScrollLeft = totalCardsWidth;
       isInitializing = false;
       handleScroll();
     };
@@ -233,32 +252,6 @@ export default function Features({ onOpen }: FeaturesProps) {
     }
   };
 
-  const AUTO_SCROLL_INTERVAL = 3000;
-  const [dotTimer, setDotTimer] = useState(0);
-
-  useEffect(() => {
-    let frame: number;
-    let start: number | undefined;
-    let animating = true;
-    function animate(ts: number) {
-      if (!animating) return;
-      if (typeof start !== 'number') start = ts;
-      const elapsed = ts - start;
-      let progress = Math.min(1, elapsed / AUTO_SCROLL_INTERVAL);
-      setDotTimer(progress);
-      if (progress < 1 && animating) {
-        frame = requestAnimationFrame(animate);
-      }
-    }
-    setDotTimer(0);
-    start = undefined;
-    animating = true;
-    frame = requestAnimationFrame(animate);
-    return () => {
-      animating = false;
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, [currentIndex]);
 
   return (
     <div className="w-full relative bg-black py-24 overflow-hidden">
@@ -280,67 +273,68 @@ export default function Features({ onOpen }: FeaturesProps) {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-4">Powerful Features</h2>
           <p className="text-white/70 text-lg max-w-2xl mx-auto">Everything you need to automate and control your Windows device</p>
         </motion.div>
+      </div>
 
-        {!onOpen && (
-          <>
-        <AnimatePresence>
-          {active && typeof active === "object" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/40 h-full w-full z-10" />
-          )}
-        </AnimatePresence>
+      {!onOpen && (
+        <>
+      <AnimatePresence>
+        {active && typeof active === "object" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/40 h-full w-full z-10" />
+        )}
+      </AnimatePresence>
 
-        <AnimatePresence>
-          {active && typeof active === "object" ? (
-            <div className="fixed inset-0 grid place-items-center z-100">
-              <motion.div
-                layoutId={`card-${active.title}-${id}`}
-                ref={ref}
-                className="w-[96%] max-w-[840px] h-full md:h-fit md:max-h-[92%] flex flex-col bg-zinc-950/95 backdrop-blur-xl border border-white/10 sm:rounded-3xl overflow-hidden shadow-2xl"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }}
-                transition={{ duration: 0.18, ease: "easeOut" }}
-              >
-                <motion.div layout className="w-full bg-zinc-900/50 p-4 md:p-6">
-                  <div className="relative w-full aspect-video rounded-xl overflow-hidden">
-                    <img
-                      src={active.src ?? "/image.png"}
-                      alt={active.title}
-                      className="absolute inset-0 w-full h-full object-cover object-center"
-                    />
-                  </div>
-                </motion.div>
-                <div className="flex flex-col">
-                  <div className="p-6 md:p-8 flex items-start gap-4 border-b border-white/10">
-                    <div className="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center">
-                      {renderIcon(features.findIndex(f => f.title === active.title))}
-                    </div>
-                    <div className="flex-1">
-                      <motion.h3 layoutId={`title-${active.title}-${id}`} className="text-white text-2xl font-medium leading-tight">{active.title}</motion.h3>
-                      <motion.p layoutId={`description-${active.description}-${id}`} className="text-white/70 text-base mt-2">{active.description}</motion.p>
-                    </div>
-                  </div>
-                  <div className="p-6 md:p-8">
-                    <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-white/80 text-sm md:text-base leading-relaxed">
-                      {active.description}
-                    </motion.div>
-                  </div>
+      <AnimatePresence>
+        {active && typeof active === "object" ? (
+          <div className="fixed inset-0 grid place-items-center z-100">
+            <motion.div
+              layoutId={`card-${active.title}-${id}`}
+              ref={ref}
+              className="w-[96%] max-w-[840px] h-full md:h-fit md:max-h-[92%] flex flex-col bg-zinc-950/95 backdrop-blur-xl border border-white/10 sm:rounded-3xl overflow-hidden shadow-2xl"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+            >
+              <motion.div layout className="w-full bg-zinc-900/50 p-4 md:p-6">
+                <div className="relative w-full aspect-video rounded-xl overflow-hidden">
+                  <img
+                    src={active.src ?? "/image.png"}
+                    alt={active.title}
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                  />
                 </div>
               </motion.div>
-            </div>
-          ) : null}
-        </AnimatePresence>
-          </>
-        )}
+              <div className="flex flex-col">
+                <div className="p-6 md:p-8 flex items-start gap-4 border-b border-white/10">
+                  <div className="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center">
+                    {renderIcon(features.findIndex(f => f.title === active.title))}
+                  </div>
+                  <div className="flex-1">
+                    <motion.h3 layoutId={`title-${active.title}-${id}`} className="text-white text-2xl font-medium leading-tight">{active.title}</motion.h3>
+                    <motion.p layoutId={`description-${active.description}-${id}`} className="text-white/70 text-base mt-2">{active.description}</motion.p>
+                  </div>
+                </div>
+                <div className="p-6 md:p-8">
+                  <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-white/80 text-sm md:text-base leading-relaxed">
+                    {active.description}
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        ) : null}
+      </AnimatePresence>
+        </>
+      )}
 
-        <motion.div
-          className="relative w-full overflow-visible px-4 sm:px-6 lg:px-8"
-          initial={false}
-          animate={{ opacity: active && typeof active === "object" ? 0.6 : 1 }}
-          transition={{ duration: 0.2 }}
-          onMouseEnter={() => setIsHoveringList(true)}
-          onMouseLeave={() => setIsHoveringList(false)}
-        >
+      <motion.div
+        className="relative w-full overflow-visible"
+        initial={false}
+        animate={{ opacity: active && typeof active === "object" ? 0.6 : 1 }}
+        transition={{ duration: 0.2 }}
+        onMouseEnter={() => setIsHoveringList(true)}
+        onMouseLeave={() => setIsHoveringList(false)}
+      >
           <ul
             ref={listRef}
             className="relative flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 scroll-smooth pt-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -356,42 +350,55 @@ export default function Features({ onOpen }: FeaturesProps) {
                   onClick={() =>
                     onOpen ? onOpen({ ...card, src: featureImages[originalIndex] }) : setActive({ ...card, src: featureImages[originalIndex] })
                   }
-                  className={`relative z-0 w-[28rem] shrink-0 snap-center bg-zinc-950/60 backdrop-blur-xl rounded-3xl p-4 md:p-6 border transition-all duration-300 cursor-pointer ${
+                  className={`relative z-0 w-[32rem] shrink-0 snap-center bg-zinc-950/60 backdrop-blur-xl rounded-3xl p-4 md:p-6 border transition-all duration-300 cursor-pointer ${
                     isCenterCard
                       ? 'border-white/40 scale-105 bg-zinc-950/80 shadow-2xl z-10'
                       : 'border-white/10 scale-100 opacity-75'
                   }`}
                   style={{ transformOrigin: 'center center' }}
                 >
-                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 bg-zinc-900/50">
+                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 bg-zinc-900">
                     <img src={featureImages[originalIndex]} alt={card.title} className="w-full h-full object-cover object-center" />
                   </div>
-                  <div className="flex items-start gap-4 mt-6 mb-6 p-2">
-                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0">{renderIcon(originalIndex)}</div>
+                  <div className="flex items-center gap-4 mb-4 p-2">
+                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-zinc-900 border border-white/40 flex items-center justify-center shrink-0">{renderIcon(originalIndex)}</div>
                     <div className="flex-1 min-w-0">
                       <h3 className="text-white font-medium text-xl md:text-2xl lg:text-2xl truncate">{card.title}</h3>
-                      <p className="mt-3 text-white/60 text-base md:text-lg line-clamp-2 md:line-clamp-3">{card.description}</p>
                     </div>
+                  </div>
+                  <div className="px-2 pb-2">
+                    <p className="text-white/60 text-base md:text-lg line-clamp-2 md:line-clamp-3">{card.description}</p>
                   </div>
                 </li>
               );
             })}
           </ul>
-          <div className="mt-2 flex items-center justify-center gap-2 h-2">
-            {[currentIndex - 1, currentIndex, currentIndex + 1].map(i => {
-              if (i < 0 || i >= features.length) return null;
-              if (i === currentIndex) {
-                return (
-                  <span key={`dot-${i}`} className="relative h-1.5 w-8 bg-white/20 rounded-full overflow-hidden">
-                    <span
-                      className="absolute left-0 top-0 bottom-0 bg-white rounded-full transition-none"
-                      style={{ width: `${(1 - dotTimer) * 100}%`, transition: dotTimer === 0 ? 'none' : 'width 80ms linear' }}
-                    />
-                  </span>
-                );
-              }
-              return <span key={`dot-${i}`} className="h-1.5 w-2 bg-white/40 rounded-full transition-all duration-300" />;
-            })}
+          <div className="mt-6 flex items-center justify-center gap-2">
+            {features.map((_, index) => (
+              <button
+                key={`indicator-${index}`}
+                type="button"
+                aria-label={`Go to feature ${index + 1}`}
+                onClick={() => {
+                  const el = listRef.current;
+                  if (!el) return;
+                  const firstCard = el.querySelector('li') as HTMLElement;
+                  if (!firstCard) return;
+                  const cardWidth = firstCard.offsetWidth;
+                  const gap = 16;
+                  const cardAndGap = cardWidth + gap;
+                  const totalCardsWidth = features.length * cardAndGap;
+                  // Calculate scroll position: middle set + target index
+                  const scrollPosition = totalCardsWidth + (index * cardAndGap);
+                  el.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+                }}
+                className={`transition-all duration-300 rounded-full ${
+                  index === currentIndex
+                    ? 'h-2 w-8 bg-white'
+                    : 'h-2 w-2 bg-white/40 hover:bg-white/60'
+                }`}
+              />
+            ))}
           </div>
           <button
             type="button"
@@ -426,7 +433,6 @@ export default function Features({ onOpen }: FeaturesProps) {
             <HugeiconsIcon icon={ArrowRight02Icon} size={30} />
           </button>
         </motion.div>
-      </div>
     </div>
   );
 }
