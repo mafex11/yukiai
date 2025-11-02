@@ -78,6 +78,7 @@ export default function Features({ onOpen }: FeaturesProps) {
   const listRef = useRef<HTMLUListElement>(null!);
   const [isHoveringList, setIsHoveringList] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [centeredCardIndex, setCenteredCardIndex] = useState<number | null>(null);
   const id = useId();
 
   useEffect(() => {
@@ -99,6 +100,8 @@ export default function Features({ onOpen }: FeaturesProps) {
     const el = listRef.current;
     if (!el) return;
     let raf = 0;
+    let isScrolling = false;
+    
     const handleScroll = () => {
       if (raf) cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
@@ -116,11 +119,51 @@ export default function Features({ onOpen }: FeaturesProps) {
             bestIdx = i;
           }
         });
-        setCurrentIndex(bestIdx);
+        const originalIdx = bestIdx % features.length;
+        setCurrentIndex(originalIdx);
+        setCenteredCardIndex(bestIdx);
+        
+        // Infinite scroll handling
+        if (isScrolling) return;
+        const firstCard = items[0];
+        if (!firstCard) return;
+        const cardWidth = firstCard.offsetWidth;
+        const gap = 16;
+        const cardAndGap = cardWidth + gap;
+        const totalCardsWidth = features.length * cardAndGap;
+        
+        // If scrolled past second set, jump back to first set
+        if (el.scrollLeft >= totalCardsWidth * 2 - 50) {
+          isScrolling = true;
+          el.scrollTo({ left: el.scrollLeft - totalCardsWidth, behavior: 'auto' });
+          setTimeout(() => { isScrolling = false; }, 50);
+        }
+        // If scrolled before first set, jump to second set
+        else if (el.scrollLeft <= 50) {
+          isScrolling = true;
+          el.scrollTo({ left: el.scrollLeft + totalCardsWidth, behavior: 'auto' });
+          setTimeout(() => { isScrolling = false; }, 50);
+        }
       });
     };
+    
     el.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    
+    // Initialize scroll position to show middle card in center
+    const initScroll = () => {
+      const firstCard = el.querySelector('li') as HTMLElement;
+      if (!firstCard) return;
+      const cardWidth = firstCard.offsetWidth;
+      const gap = 16;
+      const cardAndGap = cardWidth + gap;
+      const totalCardsWidth = features.length * cardAndGap;
+      // Start at second set, showing first card as center
+      el.scrollTo({ left: totalCardsWidth + cardAndGap, behavior: 'auto' });
+      handleScroll();
+    };
+    
+    setTimeout(initScroll, 100);
+    
     return () => {
       el.removeEventListener('scroll', handleScroll);
       if (raf) cancelAnimationFrame(raf);
@@ -133,18 +176,18 @@ export default function Features({ onOpen }: FeaturesProps) {
     const interval = setInterval(() => {
       if (isHoveringList) return;
       if (active && typeof active === "object") return;
-      const atEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth - 4;
-      if (atEnd) {
-        el.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        el.scrollBy({ left: 360, behavior: 'smooth' });
-      }
+      const firstCard = el.querySelector('li') as HTMLElement;
+      if (!firstCard) return;
+      const cardWidth = firstCard.offsetWidth;
+      const gap = 16;
+      const cardAndGap = cardWidth + gap;
+      el.scrollBy({ left: cardAndGap, behavior: 'smooth' });
     }, 3000);
     return () => clearInterval(interval);
   }, [isHoveringList, active]);
 
   const renderIcon = (index: number) => {
-    const iconCommon = { size: 24, color: "white" } as const;
+    const iconCommon = { size: 28, color: "white" } as const;
     switch (index) {
       case 0:
         return <HugeiconsIcon icon={AiEditingIcon} {...iconCommon} />;
@@ -168,6 +211,33 @@ export default function Features({ onOpen }: FeaturesProps) {
         return null;
     }
   };
+
+  const AUTO_SCROLL_INTERVAL = 3000;
+  const [dotTimer, setDotTimer] = useState(0);
+
+  useEffect(() => {
+    let frame: number;
+    let start: number | undefined;
+    let animating = true;
+    function animate(ts: number) {
+      if (!animating) return;
+      if (typeof start !== 'number') start = ts;
+      const elapsed = ts - start;
+      let progress = Math.min(1, elapsed / AUTO_SCROLL_INTERVAL);
+      setDotTimer(progress);
+      if (progress < 1 && animating) {
+        frame = requestAnimationFrame(animate);
+      }
+    }
+    setDotTimer(0);
+    start = undefined;
+    animating = true;
+    frame = requestAnimationFrame(animate);
+    return () => {
+      animating = false;
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [currentIndex]);
 
   return (
     <div className="w-full relative bg-black py-24 overflow-hidden">
@@ -255,40 +325,65 @@ export default function Features({ onOpen }: FeaturesProps) {
             className="relative flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 scroll-smooth pt-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             style={{ overflowY: 'visible' }}
           >
-            {features.map((card, index) => (
-              <li
-                key={`card-${card.title}-${id}`}
-                onClick={() =>
-                  onOpen ? onOpen({ ...card, src: featureImages[index] }) : setActive({ ...card, src: featureImages[index] })
-                }
-                className="relative z-0 min-w-[85%] md:min-w-[60%] lg:min-w-[40%] snap-center bg-zinc-950/60 backdrop-blur-xl rounded-3xl p-2 border border-white/10 cursor-pointer h-[400px] md:h-[400px] lg:h-[400px]"
-                style={{ transformOrigin: 'top center' }}
-              >
-                <div className="relative w-full h-40 md:h-48 lg:h-56 rounded-2xl overflow-hidden mb-5 bg-zinc-900/50">
-                  <img src={featureImages[index]} alt={card.title} className="w-full h-full object-cover object-center" />
-                </div>
-                <div className="flex items-start gap-4 mt-10 mb-10 p-2">
-                  <div className="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0 ">{renderIcon(index)}</div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-white font-medium text-lg md:text-xl truncate">{card.title}</h3>
-                    <p className="mt-2 text-white/60 text-sm line-clamp-2 md:line-clamp-3">{card.description}</p>
+            {[...features, ...features, ...features].map((card, index) => {
+              const originalIndex = index % features.length;
+              const isCenterCard = centeredCardIndex === index;
+              
+              return (
+                <li
+                  key={`card-${card.title}-${id}-${index}`}
+                  onClick={() =>
+                    onOpen ? onOpen({ ...card, src: featureImages[originalIndex] }) : setActive({ ...card, src: featureImages[originalIndex] })
+                  }
+                  className={`relative z-0 w-[calc((100%-4rem)/3)] shrink-0 snap-center bg-zinc-950/60 backdrop-blur-xl rounded-3xl p-4 md:p-6 border transition-all duration-300 cursor-pointer h-[480px] md:h-[520px] lg:h-[560px] ${
+                    isCenterCard
+                      ? 'border-white/40 scale-105 bg-zinc-950/80 shadow-2xl z-10'
+                      : 'border-white/10 scale-100'
+                  }`}
+                  style={{ transformOrigin: 'center center' }}
+                >
+                  <div className="relative w-full h-48 md:h-56 lg:h-64 rounded-2xl overflow-hidden mb-6 bg-zinc-900/50">
+                    <img src={featureImages[originalIndex]} alt={card.title} className="w-full h-full object-cover object-center" />
                   </div>
-                </div>
-              </li>
-            ))}
+                  <div className="flex items-start gap-4 mt-6 mb-6 p-2">
+                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0">{renderIcon(originalIndex)}</div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-white font-medium text-xl md:text-2xl lg:text-2xl truncate">{card.title}</h3>
+                      <p className="mt-3 text-white/60 text-base md:text-lg line-clamp-2 md:line-clamp-3">{card.description}</p>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
-          <div className="mt-2 flex items-center justify-center gap-2">
-            {features.map((_, i) => (
-              <span
-                key={`dot-${i}`}
-                className={`h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-6 bg-white' : 'w-2 bg-white/30'}`}
-              />
-            ))}
+          <div className="mt-2 flex items-center justify-center gap-2 h-2">
+            {[currentIndex - 1, currentIndex, currentIndex + 1].map(i => {
+              if (i < 0 || i >= features.length) return null;
+              if (i === currentIndex) {
+                return (
+                  <span key={`dot-${i}`} className="relative h-1.5 w-8 bg-white/20 rounded-full overflow-hidden">
+                    <span
+                      className="absolute left-0 top-0 bottom-0 bg-white rounded-full transition-none"
+                      style={{ width: `${(1 - dotTimer) * 100}%`, transition: dotTimer === 0 ? 'none' : 'width 80ms linear' }}
+                    />
+                  </span>
+                );
+              }
+              return <span key={`dot-${i}`} className="h-1.5 w-2 bg-white/40 rounded-full transition-all duration-300" />;
+            })}
           </div>
           <button
             type="button"
             aria-label="Scroll left"
-            onClick={() => listRef.current?.scrollBy({ left: -400, behavior: 'smooth' })}
+            onClick={() => {
+              const el = listRef.current;
+              if (!el) return;
+              const firstCard = el.querySelector('li') as HTMLElement;
+              if (!firstCard) return;
+              const cardWidth = firstCard.offsetWidth;
+              const gap = 16;
+              el.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+            }}
             className="hidden md:flex items-center justify-center absolute left-1 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-zinc-800/60 hover:bg-zinc-700/70 border border-white/10 backdrop-blur-md text-white z-10"
           >
             ‹
@@ -296,7 +391,15 @@ export default function Features({ onOpen }: FeaturesProps) {
           <button
             type="button"
             aria-label="Scroll right"
-            onClick={() => listRef.current?.scrollBy({ left: 400, behavior: 'smooth' })}
+            onClick={() => {
+              const el = listRef.current;
+              if (!el) return;
+              const firstCard = el.querySelector('li') as HTMLElement;
+              if (!firstCard) return;
+              const cardWidth = firstCard.offsetWidth;
+              const gap = 16;
+              el.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+            }}
             className="hidden md:flex items-center justify-center absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-zinc-800/60 hover:bg-zinc-700/70 border border-white/10 backdrop-blur-md text-white z-10"
           >
             ›

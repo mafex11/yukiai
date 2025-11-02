@@ -63,11 +63,11 @@ export const TextGenerateEffect = ({
 
   const renderChars = () => {
     return (
-      <motion.div ref={scope}>
+      <motion.div ref={scope} className="w-full break-words">
         {charsArray.map((ch, idx) => (
           <motion.span
             key={idx}
-            className="char text-white opacity-0"
+            className="char text-white opacity-0 inline"
             style={{
               filter: filter ? "blur(10px)" : "none",
               textShadow: glow
@@ -75,7 +75,7 @@ export const TextGenerateEffect = ({
                 : "none",
             }}
           >
-            {ch === " " ? "\u00A0" : ch}
+            {ch === " " ? " " : ch}
           </motion.span>
         ))}
       </motion.div>
@@ -83,9 +83,9 @@ export const TextGenerateEffect = ({
   };
 
   return (
-    <div className={cn("font-bold", className)}>
-      <div className="mt-4">
-        <div className="  text-white leading-snug tracking-wide">
+    <div className={cn("font-bold w-full", className)}>
+      <div className="mt-4 w-full">
+        <div className="text-white leading-snug tracking-wide w-full break-words">
           {byChar ? renderChars() : renderWords()}
         </div>
       </div>

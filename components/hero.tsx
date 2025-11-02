@@ -1,17 +1,18 @@
 "use client";
 
-import Image from "next/image";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import HeroBackground from './hero-background';
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Loading01Icon, AccelerationIcon, Triangle02Icon, Loading03Icon } from "@hugeicons/core-free-icons";
 
 export default function Hero() {
-  const { scrollY } = useScroll();
-  const imageScale = useTransform(scrollY, [0, 300], [1, 1.2]);
-  const imageOpacity = useTransform(scrollY, [0, 200], [1, 0.8]);
   const [email, setEmail] = useState("");
+  const [showForm, setShowForm] = useState(false);
   const rotatingPhrases = [
     "help me with this",
     "email bob to ask for leave tomorrow",
@@ -44,104 +45,140 @@ export default function Hero() {
   }, []);
   const displayText = `"Yuki, ${rotatingPhrases[phraseIndex]}"`;
 
-  
   return (
-    <div className="min-h-screen w-full relative bg-black overflow-x-hidden">
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 80, 120, 0.25), transparent 70%), #000000",
-        }}
-      />
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 120% 90% at 50% 100%, rgba(255, 80, 120, 0.18), transparent 80%)",
-        }}
-      />
-
-      <main className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-16 py-66 ">
-        <div className="flex flex-col items-center gap-8 ">
+    <main>
+      <HeroBackground>
+        <div style={{
+          position: 'absolute',
+          top: '10%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '2rem',
+          zIndex: 7
+        }}>
           <motion.div
-            className="flex flex-col items-center justify-center w-full text-center min-h-[40vh]"
+            className="flex flex-col items-center justify-center w-full text-center"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <div className="flex flex-col items-center gap-2 mb-4 mt-20">
+            <div className="flex flex-col items-center gap-2 mb-4 pt-40">
               <div className="flex items-center justify-center gap-2">
-                {/* <Image
-                  src="/logowithoutbg.svg"
-                  alt="Yuki AI Logo"
-                  width={80}
-                  height={80}
-                  className="w-10 h-10 sm:w-14 sm:h-14 mt-2"
-                /> */}
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={displayText}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.35, ease: "easeOut" }}
-                  >
-                    <TextGenerateEffect
-                      words={displayText}
-                      className="text-xl sm:text-6xl lg:text-8xl font-normal text-white text-center px-4"
-                      duration={0.5}
-                      staggerDelay={0.015}
-                      byChar
-                      glow
-                      glowColor="rgba(255,180,120,0.9)"
-                      
-                    />
-                  </motion.div>
-                </AnimatePresence>
+                {/* Mobile: Static Title */}
+                <div className="md:hidden text-center">
+                  <TextGenerateEffect
+                    words='Yuki AI'
+                    className="text-7xl font-normal text-white "
+                    duration={0.5}
+                    staggerDelay={0.015}
+                    byChar
+                    glow
+                    glowColor="rgba(251,50,50,0.9)"
+                  />
+                </div>
+                {/* Desktop: Rotating Title */}
+                <div className="hidden md:block w-full max-w-8xl">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={displayText}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="w-full"
+                    >
+                      <div className="w-full flex justify-center px-2 md:px-3 lg:px-4">
+                        <TextGenerateEffect
+                          words={displayText}
+                          className="md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-normal text-white text-center wrap-break-words whitespace-normal max-w-full"
+                          duration={0.5}
+                          staggerDelay={0.015}
+                          byChar
+                          glow
+                          glowColor="rgba(251,50,50,0.9)"
+                        />
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-light text-white text-center px-4 mb-20">
-                AI Agentic Assistant to Control And Automate Your Device
-              </h1>
-            {/* <p className="text-base sm:text-lg text-white/80 mb-8 text-center px-4">Yuki AI is a platform for creating and deploying AI models.</p> */}
-            <div className="flex flex-col items-center gap-4 justify-center w-full">
-              <form
-                onSubmit={(e) => { e.preventDefault(); /* hook up later */ }}
-                className="w-full max-w-xl flex items-center gap-2"
-              >
-                <Input
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  type="email"
-                />
-                <Button type="submit" variant="secondary">Join waitlist</Button>
-              </form>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline">Get prelaunch demo</Button>
-              </motion.div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-thin text-white text-center px-4 mb-6 -mt-4">
+              AI Agentic Assistant to Control And Automate Your Device
+            </h1>
+            <div className="flex flex-col items-center gap-6 justify-center w-full min-h-[110px]">
+              <AnimatePresence mode="wait">
+                {showForm ? (
+                  <motion.form
+                    key="form"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    onSubmit={(e) => { e.preventDefault(); }}
+                    className="w-full max-w-xl flex items-center gap-2"
+                  >
+                    <div className="relative w-full rounded-full">
+                      <Input
+                        placeholder="Enter Your Email To Join Waitlist"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        type="email"
+                        className="text-lg h-14 pl-6 pr-32 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/20 text-white placeholder:text-white/50 focus:border-orange-950/50 focus:bg-orange-950/50 focus:shadow-[0_0_30px_rgba(255,180,120,0.3)] transition-all duration-300"
+                      />
+                      <Button
+                        type="submit"
+                        variant="default"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full p-0 bg-zinc-950/90 border border-white/40 text-white hover:text-black hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,180,120,0.5)] transition-all duration-300 group"
+                      >
+                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                      </Button>
+                    </div>
+                  </motion.form>
+                ) : (
+                  <motion.div
+                    key="buttons"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex items-center gap-4"
+                  >
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button
+                        variant="default"
+                        onClick={() => setShowForm(true)}
+                        className="h-14 px-7 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group"
+                      >
+                        <HugeiconsIcon 
+                          icon={Loading03Icon}
+                          className="transition-transform duration-300 group-hover:rotate-[90deg] "
+                        />
+                        Join Waitlist
+                        <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 " />
+                      </Button>
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button
+                        variant="outline"
+                        className="h-14 px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group"
+                      >
+                        <HugeiconsIcon icon={AccelerationIcon} size={20} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-[-30deg]" />
+                        Get Demo
+                        <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </Button>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
-
-          <motion.div
-            className="relative w-full max-w-6xl mx-auto p-4 bg-zinc-950/90 border border-white/10 rounded-3xl mt-10"
-            initial={{ scale: 0.85, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            style={{ scale: imageScale, opacity: imageOpacity }}
-          >
-            <Image
-              src="/image3.png"
-              alt="Yuki AI"
-              width={1800}
-              height={1000}
-              className="w-full h-auto rounded-3xl shadow-[0_0_40px_0_rgba(255,140,0,0.2)]"
-              style={{ maxWidth: '100%', height: 'auto' }}
-            />
-          </motion.div>
         </div>
-      </main>
-    </div>
+      </HeroBackground>
+    </main>
   );
 }
+

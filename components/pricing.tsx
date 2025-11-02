@@ -13,39 +13,28 @@ type Plan = {
 
 const plans: Plan[] = [
   {
-    name: "Starter",
+    name: "Free Demo",
     price: "$0",
-    description: "For trying Yuki locally",
+    description: "Try Yuki before you buy",
     features: [
-      "Voice control",
-      "3 automation tools",
-      "Local-only runtime",
+      "Full access to all features",
+      "Limited usage time",
+      "Perfect for testing",
     ],
     cta: "Get started",
   },
   {
-    name: "Pro",
-    price: "$12/mo",
-    description: "Daily power usage",
+    name: "Full Access",
+    price: "$49",
+    description: "One-time fee, lifetime updates",
     features: [
-      "All 17 automation tools",
-      "Task scheduling",
-      "Program usage tracking",
-      "Focus suggestions",
+      "Unlimited everything",
+      "All updates included",
+      "Premium support",
+      "Lifetime access",
     ],
-    cta: "Upgrade",
+    cta: "Buy now",
     highlight: true,
-  },
-  {
-    name: "Team",
-    price: "$29/mo",
-    description: "Teams and multi-device",
-    features: [
-      "Everything in Pro",
-      "Shared memory & context",
-      "Role-based access",
-    ],
-    cta: "Contact sales",
   },
 ];
 
@@ -58,7 +47,7 @@ export default function Pricing() {
           <p className="text-white/70 text-lg">Simple plans that grow with you</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {plans.map((plan, idx) => (
             <motion.div
               key={plan.name}

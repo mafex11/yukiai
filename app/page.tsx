@@ -3,7 +3,6 @@
 import Hero from "../components/hero";
 import Features, { Feature } from "../components/features";
 import Pricing from "../components/pricing";
-import Hero2 from "../components/hero2";
 import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
@@ -13,8 +12,8 @@ export default function YukiAI() {
   useOutsideClick(ref, () => setActiveFeature(null));
   return (
     <>
-      {/* <Hero /> */}
-      <Hero2 featuresOnOpen={setActiveFeature} />
+      <Hero/>
+      <Features onOpen={setActiveFeature} />
       <AnimatePresence>
         {activeFeature && (
           <>
