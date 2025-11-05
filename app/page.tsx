@@ -2,7 +2,11 @@
 
 import Hero from "../components/hero";
 import Features, { Feature } from "../components/features";
+import DemoVideo from "../components/demo-video";
+import HowItWorks from "../components/how-it-works";
+import FAQ from "../components/faq";
 import Pricing from "../components/pricing";
+import GradualBlur from "../components/GradualBlur";
 import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
@@ -13,6 +17,7 @@ export default function YukiAI() {
   return (
     <>
       <Hero/>
+      <DemoVideo />
       <Features onOpen={setActiveFeature} />
       <AnimatePresence>
         {activeFeature && (
@@ -49,6 +54,9 @@ export default function YukiAI() {
         )}
       </AnimatePresence>
       <Pricing />
+      <HowItWorks />
+      <FAQ />
+      <GradualBlur preset="page-footer" target="page" position="bottom" height="8rem" strength={2} zIndex={40} animated />
     </>
   );
 }
