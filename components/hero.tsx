@@ -66,7 +66,7 @@ export default function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <div className="flex flex-col items-center gap-2 mb-4 pt-20">
+            <div className="flex flex-col items-center gap-2 mb-4 pt-2ffffff0">
               <div className="flex items-center justify-center gap-2">
                 {/* Mobile: Static Title */}
                 <div className="md:hidden text-center">
