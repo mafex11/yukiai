@@ -54,20 +54,20 @@ export default function Pricing() {
           {plans.map((plan, idx) => (
             <motion.div
               key={plan.name}
-              className={`rounded-3xl border backdrop-blur-2xl relative overflow-hidden shadow-[0_20px_60px_0_rgba(0,0,0,0.5)] w-full md:w-[420px] lg:w-[480px] min-h-[700px] lg:min-h-[800px] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_25px_70px_0_rgba(0,0,0,0.6)] ${
-                plan.highlight ? "border-white/30" : "border-white/15"
+              className={`rounded-3xl border backdrop-blur-2xl relative overflow-hidden shadow-[0_20px_60px_0_rgba(0,0,0,0.5)] w-full md:w-[420px] lg:w-[480px] min-h-[700px] lg:min-h-[800px] transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_30px_80px_0_rgba(0,0,0,0.7)] group ${
+                plan.highlight ? "border-orange-500/40" : "border-white/15 hover:border-white/25"
               }`}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              transition={{ duration: 0.6, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 background: plan.highlight
-                  ? "linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.5) 100%)"
-                  : "linear-gradient(to bottom, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.5) 100%)",
+                  ? "linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.6) 100%)"
+                  : "linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.6) 100%)",
                 boxShadow: plan.highlight
-                  ? "0 20px 60px 0 rgba(0,0,0,0.5), 0 0 40px 12px rgba(251,50,50,0.5)"
-                  : undefined,
+                  ? "0 20px 60px 0 rgba(0,0,0,0.6), 0 0 50px 15px rgba(251,146,60,0.4), inset 0 1px 0 0 rgba(255,255,255,0.1)"
+                  : "0 20px 60px 0 rgba(0,0,0,0.5), inset 0 1px 0 0 rgba(255,255,255,0.05)",
               }}
             >
               <div
@@ -107,15 +107,17 @@ export default function Pricing() {
                 </div>
 
                 {/* CTA Button */}
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   className={`w-full rounded-xl px-6 py-4 text-base font-semibold transition-all duration-300 mb-10 lg:mb-12 ${
                     plan.highlight
-                      ? "bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40"
-                      : "bg-zinc-800 text-white hover:bg-zinc-700 border border-white/10"
+                      ? "bg-gradient-to-r from-orange-500 via-orange-600 to-red-500 text-white hover:from-orange-400 hover:via-orange-500 hover:to-red-400 shadow-lg shadow-orange-500/40 hover:shadow-xl hover:shadow-orange-500/50"
+                      : "bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 border border-white/10 hover:border-white/20"
                   }`}
                 >
                   {plan.cta}
-                </button>
+                </motion.button>
 
                 {/* Features Separator */}
                 <div className="relative mb-10">
@@ -131,13 +133,20 @@ export default function Pricing() {
 
                 {/* Features List */}
                 <ul className="space-y-5 lg:space-y-6 flex-1">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-4">
-                      <div className="mt-0.5 w-6 h-6 rounded-full bg-zinc-800 border border-white/20 flex items-center justify-center shrink-0">
-                        <Check className="w-4 h-4 text-white" />
+                  {plan.features.map((feature, idx) => (
+                    <motion.li 
+                      key={feature} 
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.1 + 0.3 }}
+                      className="flex items-start gap-4 group"
+                    >
+                      <div className="mt-0.5 w-6 h-6 rounded-full bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/20 group-hover:border-orange-500/50 flex items-center justify-center shrink-0 transition-all duration-300 group-hover:shadow-md group-hover:shadow-orange-500/20">
+                        <Check className="w-4 h-4 text-white group-hover:text-orange-400 transition-colors duration-300" />
                       </div>
-                      <span className="text-white/80 text-base lg:text-lg leading-relaxed pt-0.5">{feature}</span>
-                    </li>
+                      <span className="text-white/80 group-hover:text-white text-base lg:text-lg leading-relaxed pt-0.5 transition-colors duration-300">{feature}</span>
+                    </motion.li>
                   ))}
                 </ul>
               </div>

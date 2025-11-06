@@ -30,21 +30,25 @@ export default function HowItWorks() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-3">How it works</h2>
           <p className="text-white/70 text-lg">From voice to action in three steps</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {steps.map((s, i) => (
             <motion.div
               key={s.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="rounded-3xl border border-white/10 bg-zinc-900/50 p-8 backdrop-blur-xl"
+              transition={{ duration: 0.5, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -5 }}
+              className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900/60 to-zinc-950/60 p-8 lg:p-10 backdrop-blur-xl hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-500 group relative overflow-hidden"
             >
-              <div className="w-14 h-14 rounded-xl bg-zinc-900 border border-white/20 flex items-center justify-center mb-5">
-                <HugeiconsIcon icon={s.icon} size={26} color="white" />
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
+              <div className="relative z-10">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/20 group-hover:border-orange-500/50 flex items-center justify-center mb-6 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-orange-500/20">
+                  <HugeiconsIcon icon={s.icon} size={28} color="white" className="group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <h3 className="text-white text-2xl font-semibold mb-3 group-hover:text-orange-100 transition-colors duration-300">{s.title}</h3>
+                <p className="text-white/70 text-base leading-relaxed group-hover:text-white/80 transition-colors duration-300">{s.description}</p>
               </div>
-              <h3 className="text-white text-2xl font-medium mb-2">{s.title}</h3>
-              <p className="text-white/70 text-base leading-relaxed">{s.description}</p>
             </motion.div>
           ))}
         </div>

@@ -16,7 +16,10 @@ const DEFAULT_CONFIG = {
   responsive: false,
   target: 'parent',
   className: '',
-  style: {}
+  style: {},
+  radial: false,
+  radialCenter: 'center',
+  radialExpand: true
 };
 
 const PRESETS = {
@@ -53,6 +56,21 @@ const getGradientDirection = position => {
     right: 'to right'
   };
   return directions[position] || 'to bottom';
+};
+
+const getRadialCenter = (center, position) => {
+  const centers = {
+    center: 'center',
+    top: 'center top',
+    bottom: 'center bottom',
+    left: 'left center',
+    right: 'right center',
+    'top-left': 'top left',
+    'top-right': 'top right',
+    'bottom-left': 'bottom left',
+    'bottom-right': 'bottom right'
+  };
+  return centers[center] || centers[position] || 'center';
 };
 
 const debounce = (fn, wait) => {
@@ -101,6 +119,50 @@ const useIntersectionObserver = (ref, shouldObserve = false) => {
   return isVisible;
 };
 
+const useRadialBlurStyles = () => {
+  useEffect(() => {
+    const styleId = 'gradual-blur-radial-styles';
+    if (document.getElementById(styleId)) return;
+
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      @keyframes radialBlurExpand {
+        0% {
+          transform: scale(0.8);
+          opacity: 0.3;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(1.3);
+          opacity: 0;
+        }
+      }
+      @keyframes radialBlurPulse {
+        0%, 100% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        50% {
+          transform: scale(1.15);
+          opacity: 0.9;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      const existingStyle = document.getElementById(styleId);
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+    };
+  }, []);
+};
+
 const GradualBlur = props => {
   const containerRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -113,6 +175,8 @@ const GradualBlur = props => {
   const responsiveHeight = useResponsiveDimension(config.responsive, config, 'height');
   const responsiveWidth = useResponsiveDimension(config.responsive, config, 'width');
   const isVisible = useIntersectionObserver(containerRef, config.animated === 'scroll');
+  
+  useRadialBlurStyles();
 
   const blurDivs = useMemo(() => {
     const divs = [];
@@ -132,28 +196,64 @@ const GradualBlur = props => {
       } else {
         blurValue = 0.0625 * (progress * config.divCount + 1) * currentStrength;
       }
-      const p1 = math.round((increment * i - increment) * 10) / 10;
-      const p2 = math.round(increment * i * 10) / 10;
-      const p3 = math.round((increment * i + increment) * 10) / 10;
-      const p4 = math.round((increment * i + increment * 2) * 10) / 10;
-      let gradient = `transparent ${p1}%, black ${p2}%`;
-      if (p3 <= 100) gradient += `, black ${p3}%`;
-      if (p4 <= 100) gradient += `, transparent ${p4}%`;
 
-      const direction = getGradientDirection(config.position);
+      let maskImage, webkitMaskImage;
+      let transform = '';
+      let animationDelay = '';
+
+      if (config.radial && config.radialExpand) {
+        const radialCenter = getRadialCenter(config.radialCenter, config.position);
+        const innerRadius = math.max(0, (progress - 0.15) * 100);
+        const outerRadius = progress * 100;
+        const nextRadius = math.min(100, (progress + 0.1) * 100);
+        
+        maskImage = `radial-gradient(circle at ${radialCenter}, transparent ${innerRadius}%, black ${outerRadius}%, black ${nextRadius}%, transparent ${nextRadius}%)`;
+        webkitMaskImage = maskImage;
+        
+        if (config.animated) {
+          const scaleStart = innerRadius / 100;
+          const scaleEnd = 1 + (1 - progress) * 0.3;
+          transform = `scale(${scaleStart})`;
+          animationDelay = `${(i - 1) * 0.1}s`;
+        }
+      } else if (config.radial) {
+        const radialCenter = getRadialCenter(config.radialCenter, config.position);
+        const innerRadius = math.max(0, (progress - 0.1) * 100);
+        const outerRadius = progress * 100;
+        const nextRadius = math.min(100, (progress + 0.15) * 100);
+        
+        maskImage = `radial-gradient(circle at ${radialCenter}, transparent ${innerRadius}%, black ${outerRadius}%, black ${nextRadius}%, transparent ${nextRadius}%)`;
+        webkitMaskImage = maskImage;
+      } else {
+        const p1 = math.round((increment * i - increment) * 10) / 10;
+        const p2 = math.round(increment * i * 10) / 10;
+        const p3 = math.round((increment * i + increment) * 10) / 10;
+        const p4 = math.round((increment * i + increment * 2) * 10) / 10;
+        let gradient = `transparent ${p1}%, black ${p2}%`;
+        if (p3 <= 100) gradient += `, black ${p3}%`;
+        if (p4 <= 100) gradient += `, transparent ${p4}%`;
+        const direction = getGradientDirection(config.position);
+        maskImage = `linear-gradient(${direction}, ${gradient})`;
+        webkitMaskImage = maskImage;
+      }
 
       const divStyle = {
         position: 'absolute',
         inset: '0',
-        maskImage: `linear-gradient(${direction}, ${gradient})`,
-        WebkitMaskImage: `linear-gradient(${direction}, ${gradient})`,
+        maskImage,
+        WebkitMaskImage: webkitMaskImage,
         backdropFilter: `blur(${blurValue.toFixed(3)}rem)`,
         WebkitBackdropFilter: `blur(${blurValue.toFixed(3)}rem)`,
         opacity: config.opacity,
+        transform: transform || undefined,
+        transformOrigin: config.radial ? getRadialCenter(config.radialCenter, config.position) : undefined,
         transition:
           config.animated && config.animated !== 'scroll'
-            ? `backdrop-filter ${config.duration} ${config.easing}`
-            : undefined
+            ? `backdrop-filter ${config.duration} ${config.easing}, transform ${config.duration} ${config.easing}`
+            : undefined,
+        animation: config.radial && config.radialExpand && config.animated
+          ? `radialBlurExpand ${config.duration} ${config.easing} ${animationDelay} infinite`
+          : undefined
       };
 
       divs.push(<div key={i} style={divStyle} />);
