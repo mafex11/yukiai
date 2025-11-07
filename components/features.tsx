@@ -76,7 +76,10 @@ type FeaturesProps = {
 export default function Features({ onOpen }: FeaturesProps) {
   const [active, setActive] = useState<Feature | boolean | null>(null);
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const ref = useRef<HTMLDivElement>(null!);
+  const autoScrollRef = useRef<number | null>(null);
+  const pauseTimeoutRef = useRef<number | null>(null);
   const id = useId();
 
   const currentFeature = features[currentFeatureIndex];
@@ -96,12 +99,54 @@ export default function Features({ onOpen }: FeaturesProps) {
 
   useOutsideClick(ref, () => setActive(null));
 
+  useEffect(() => {
+    if (isPaused) {
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current);
+        autoScrollRef.current = null;
+      }
+      return;
+    }
+
+    autoScrollRef.current = window.setInterval(() => {
+      setCurrentFeatureIndex((prev) => (prev + 1) % features.length);
+    }, 4000);
+
+    return () => {
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current);
+      }
+      if (pauseTimeoutRef.current) {
+        clearTimeout(pauseTimeoutRef.current);
+      }
+    };
+  }, [isPaused]);
+
   const nextFeature = () => {
     setCurrentFeatureIndex((prev) => (prev + 1) % features.length);
+    setIsPaused(true);
+    if (pauseTimeoutRef.current) {
+      clearTimeout(pauseTimeoutRef.current);
+    }
+    pauseTimeoutRef.current = window.setTimeout(() => setIsPaused(false), 8000);
   };
 
   const prevFeature = () => {
     setCurrentFeatureIndex((prev) => (prev - 1 + features.length) % features.length);
+    setIsPaused(true);
+    if (pauseTimeoutRef.current) {
+      clearTimeout(pauseTimeoutRef.current);
+    }
+    pauseTimeoutRef.current = window.setTimeout(() => setIsPaused(false), 8000);
+  };
+
+  const goToFeature = (index: number) => {
+    setCurrentFeatureIndex(index);
+    setIsPaused(true);
+    if (pauseTimeoutRef.current) {
+      clearTimeout(pauseTimeoutRef.current);
+    }
+    pauseTimeoutRef.current = window.setTimeout(() => setIsPaused(false), 8000);
   };
 
   const renderIcon = (index: number) => {
@@ -152,7 +197,11 @@ export default function Features({ onOpen }: FeaturesProps) {
         </motion.div>
 
         {/* Full-width feature with navigation */}
-        <div className="relative mb-16">
+        <div 
+          className="relative mb-16"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={currentFeatureIndex}
@@ -169,14 +218,16 @@ export default function Features({ onOpen }: FeaturesProps) {
                     ? onOpen({ ...currentFeature, src: featureImages[currentFeatureIndex] })
                     : setActive({ ...currentFeature, src: featureImages[currentFeatureIndex] })
                 }
-                className="w-full bg-zinc-950/60 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden cursor-pointer hover:border-white/20 transition-all duration-300 group"
+                className="w-full bg-gradient-to-br from-zinc-950/80 to-zinc-900/80 rounded-3xl border border-white/10 overflow-hidden cursor-pointer hover:border-white/30 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 group relative"
               >
-                <div className="relative w-full aspect-[16/9] bg-zinc-900">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative w-full aspect-[16/9] bg-zinc-900 overflow-hidden">
                   <img
                     src={featureImages[currentFeatureIndex] ?? "/image.png"}
                     alt={currentFeature.title}
-                    className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-transparent" />
                 </div>
               </div>
 
@@ -187,16 +238,17 @@ export default function Features({ onOpen }: FeaturesProps) {
                     ? onOpen({ ...currentFeature, src: featureImages[currentFeatureIndex] })
                     : setActive({ ...currentFeature, src: featureImages[currentFeatureIndex] })
                 }
-                className="w-full bg-zinc-950/60 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden cursor-pointer hover:border-white/20 transition-all duration-300"
+                className="w-full bg-gradient-to-br from-zinc-950/70 to-zinc-900/70 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden cursor-pointer hover:border-white/30 hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-500 group"
               >
-                <div className="p-8 lg:p-12 flex flex-col">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 rounded-xl bg-zinc-900 border border-white/40 flex items-center justify-center shrink-0">
+                <div className="p-8 lg:p-12 flex flex-col relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
+                  <div className="flex items-center gap-4 mb-6 relative z-10">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/40 flex items-center justify-center shrink-0 group-hover:border-orange-500/50 group-hover:shadow-lg group-hover:shadow-orange-500/20 transition-all duration-300">
                       {renderIcon(currentFeatureIndex)}
                     </div>
-                    <h3 className="text-white font-medium text-3xl lg:text-4xl">{currentFeature.title}</h3>
+                    <h3 className="text-white font-semibold text-3xl lg:text-4xl group-hover:text-orange-100 transition-colors duration-300">{currentFeature.title}</h3>
                   </div>
-                  <p className="text-white/70 text-lg lg:text-xl leading-relaxed">{currentFeature.description}</p>
+                  <p className="text-white/70 text-lg lg:text-xl leading-relaxed group-hover:text-white/80 transition-colors duration-300 relative z-10">{currentFeature.description}</p>
                 </div>
               </div>
             </motion.div>
@@ -207,31 +259,31 @@ export default function Features({ onOpen }: FeaturesProps) {
             type="button"
             aria-label="Previous feature"
             onClick={prevFeature}
-            className="absolute -left-12 lg:-left-16 xl:-left-20 top-1/2 -translate-y-1/2 h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-zinc-950/90 hover:bg-zinc-900 border border-white/40 backdrop-blur-sm text-white z-10 transition-all duration-300 hover:scale-110 flex items-center justify-center"
+            className="absolute -left-12 lg:-left-16 xl:-left-20 top-1/2 -translate-y-1/2 h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 hover:from-zinc-900 hover:to-zinc-800 border border-white/40 hover:border-orange-500/50 backdrop-blur-md text-white z-10 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-orange-500/20 flex items-center justify-center group"
           >
-            <HugeiconsIcon icon={ArrowLeft02Icon} size={30} />
+            <HugeiconsIcon icon={ArrowLeft02Icon} size={30} className="group-hover:text-orange-400 transition-colors duration-300" />
           </button>
           <button
             type="button"
             aria-label="Next feature"
             onClick={nextFeature}
-            className="absolute -right-12 lg:-right-16 xl:-right-20 top-1/2 -translate-y-1/2 h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-zinc-950/90 hover:bg-zinc-900 border border-white/40 backdrop-blur-sm text-white z-10 transition-all duration-300 hover:scale-110 flex items-center justify-center"
+            className="absolute -right-12 lg:-right-16 xl:-right-20 top-1/2 -translate-y-1/2 h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 hover:from-zinc-900 hover:to-zinc-800 border border-white/40 hover:border-orange-500/50 backdrop-blur-md text-white z-10 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-orange-500/20 flex items-center justify-center group"
           >
-            <HugeiconsIcon icon={ArrowRight02Icon} size={30} />
+            <HugeiconsIcon icon={ArrowRight02Icon} size={30} className="group-hover:text-orange-400 transition-colors duration-300" />
           </button>
 
           {/* Feature indicators */}
-          <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="mt-8 flex items-center justify-center gap-2">
             {features.map((_, index) => (
               <button
                 key={`indicator-${index}`}
                 type="button"
                 aria-label={`Go to feature ${index + 1}`}
-                onClick={() => setCurrentFeatureIndex(index)}
+                onClick={() => goToFeature(index)}
                 className={`transition-all duration-300 rounded-full ${
                   index === currentFeatureIndex
-                    ? "h-2 w-8 bg-white"
-                    : "h-2 w-2 bg-white/40 hover:bg-white/60"
+                    ? "h-2.5 w-10 bg-gradient-to-r from-orange-500 to-red-500 shadow-lg shadow-orange-500/50"
+                    : "h-2 w-2 bg-white/40 hover:bg-white/60 hover:scale-125"
                 }`}
               />
             ))}
@@ -315,4 +367,3 @@ export default function Features({ onOpen }: FeaturesProps) {
     </div>
   );
 }
-
