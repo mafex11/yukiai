@@ -259,17 +259,17 @@ export default function Features({ onOpen }: FeaturesProps) {
             type="button"
             aria-label="Previous feature"
             onClick={prevFeature}
-            className="absolute -left-12 lg:-left-16 xl:-left-20 top-1/2 -translate-y-1/2 h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 hover:from-zinc-900 hover:to-zinc-800 border border-white/40 hover:border-orange-500/50 backdrop-blur-md text-white z-10 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-orange-500/20 flex items-center justify-center group"
+            className="absolute -left-12 lg:-left-16 xl:-left-20 top-1/2 -translate-y-1/2 h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 hover:bg-[rgba(251,50,50,0.5)] border border-white/40 hover:border-[rgba(251,50,50,0.5)] backdrop-blur-md text-white z-10 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-[rgba(251,50,50,0.3)] flex items-center justify-center group"
           >
-            <HugeiconsIcon icon={ArrowLeft02Icon} size={30} className="group-hover:text-orange-400 transition-colors duration-300" />
+            <HugeiconsIcon icon={ArrowLeft02Icon} size={30} className="group-hover:text-white transition-colors duration-300" />
           </button>
           <button
             type="button"
             aria-label="Next feature"
             onClick={nextFeature}
-            className="absolute -right-12 lg:-right-16 xl:-right-20 top-1/2 -translate-y-1/2 h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 hover:from-zinc-900 hover:to-zinc-800 border border-white/40 hover:border-orange-500/50 backdrop-blur-md text-white z-10 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-orange-500/20 flex items-center justify-center group"
+            className="absolute -right-12 lg:-right-16 xl:-right-20 top-1/2 -translate-y-1/2 h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 hover:bg-[rgba(251,50,50,0.5)] border border-white/40 hover:border-[rgba(251,50,50,0.5)] backdrop-blur-md text-white z-10 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-[rgba(251,50,50,0.3)] flex items-center justify-center group"
           >
-            <HugeiconsIcon icon={ArrowRight02Icon} size={30} className="group-hover:text-orange-400 transition-colors duration-300" />
+            <HugeiconsIcon icon={ArrowRight02Icon} size={30} className="group-hover:text-white transition-colors duration-300" />
           </button>
 
           {/* Feature indicators */}
@@ -282,8 +282,8 @@ export default function Features({ onOpen }: FeaturesProps) {
                 onClick={() => goToFeature(index)}
                 className={`transition-all duration-300 rounded-full ${
                   index === currentFeatureIndex
-                    ? "h-2.5 w-10 bg-gradient-to-r from-orange-500 to-red-500 shadow-lg shadow-orange-500/50"
-                    : "h-2 w-2 bg-white/40 hover:bg-white/60 hover:scale-125"
+                    ? "h-2.5 w-10 bg-[rgba(251,50,50,0.8)] shadow-lg shadow-[rgba(251,50,50,0.4)]"
+                    : "h-2 w-2 bg-white/40 hover:bg-[rgba(251,50,50,0.5)] hover:scale-125"
                 }`}
               />
             ))}

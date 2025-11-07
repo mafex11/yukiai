@@ -19,7 +19,7 @@ export default function YukiAI() {
   return (
     <>
       <Hero/>
-      <DemoVideo />
+      {/* <DemoVideo /> */}
       <Features onOpen={setActiveFeature} />
       <AnimatePresence>
         {activeFeature && (

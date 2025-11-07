@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import * as math from 'mathjs';
 
 const DEFAULT_CONFIG = {
   position: 'bottom',
@@ -192,7 +191,7 @@ const GradualBlur = props => {
 
       let blurValue;
       if (config.exponential) {
-        blurValue = math.pow(2, progress * 4) * 0.0625 * currentStrength;
+        blurValue = Math.pow(2, progress * 4) * 0.0625 * currentStrength;
       } else {
         blurValue = 0.0625 * (progress * config.divCount + 1) * currentStrength;
       }
@@ -203,9 +202,9 @@ const GradualBlur = props => {
 
       if (config.radial && config.radialExpand) {
         const radialCenter = getRadialCenter(config.radialCenter, config.position);
-        const innerRadius = math.max(0, (progress - 0.15) * 100);
+        const innerRadius = Math.max(0, (progress - 0.15) * 100);
         const outerRadius = progress * 100;
-        const nextRadius = math.min(100, (progress + 0.1) * 100);
+        const nextRadius = Math.min(100, (progress + 0.1) * 100);
         
         maskImage = `radial-gradient(circle at ${radialCenter}, transparent ${innerRadius}%, black ${outerRadius}%, black ${nextRadius}%, transparent ${nextRadius}%)`;
         webkitMaskImage = maskImage;
@@ -218,17 +217,17 @@ const GradualBlur = props => {
         }
       } else if (config.radial) {
         const radialCenter = getRadialCenter(config.radialCenter, config.position);
-        const innerRadius = math.max(0, (progress - 0.1) * 100);
+        const innerRadius = Math.max(0, (progress - 0.1) * 100);
         const outerRadius = progress * 100;
-        const nextRadius = math.min(100, (progress + 0.15) * 100);
+        const nextRadius = Math.min(100, (progress + 0.15) * 100);
         
         maskImage = `radial-gradient(circle at ${radialCenter}, transparent ${innerRadius}%, black ${outerRadius}%, black ${nextRadius}%, transparent ${nextRadius}%)`;
         webkitMaskImage = maskImage;
       } else {
-        const p1 = math.round((increment * i - increment) * 10) / 10;
-        const p2 = math.round(increment * i * 10) / 10;
-        const p3 = math.round((increment * i + increment) * 10) / 10;
-        const p4 = math.round((increment * i + increment * 2) * 10) / 10;
+        const p1 = Math.round((increment * i - increment) * 10) / 10;
+        const p2 = Math.round(increment * i * 10) / 10;
+        const p3 = Math.round((increment * i + increment) * 10) / 10;
+        const p4 = Math.round((increment * i + increment * 2) * 10) / 10;
         let gradient = `transparent ${p1}%, black ${p2}%`;
         if (p3 <= 100) gradient += `, black ${p3}%`;
         if (p4 <= 100) gradient += `, transparent ${p4}%`;

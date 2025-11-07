@@ -50,7 +50,7 @@
         <HeroBackground>
           <div style={{
             position: 'absolute',
-            top: '10%',
+            top: '15%',
             left: '50%',
             transform: 'translateX(-50%)',
             width: '100%',

@@ -39,11 +39,11 @@ export default function HowItWorks() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -5 }}
-              className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900/60 to-zinc-950/60 p-8 lg:p-10 backdrop-blur-xl hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-500 group relative overflow-hidden"
+              className="rounded-3xl border border-white/10 bg-linear-to-br from-zinc-900/60 to-zinc-950/60 p-8 lg:p-10 backdrop-blur-xl hover:border-[rgba(251,50,50,0.5)] hover:shadow-[0_20px_45px_rgba(251,50,50,0.5)] transition-all duration-500 group relative overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
+              <div className="absolute inset-0 bg-linear-to-br from-[rgba(251,50,50,0.5)] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
               <div className="relative z-10">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/20 group-hover:border-orange-500/50 flex items-center justify-center mb-6 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-orange-500/20">
+                <div className="w-16 h-16 rounded-xl bg-linear-to-br from-zinc-900 to-zinc-950 border border-white/20 group-hover:border-[rgba(251,50,50,0.5)] flex items-center justify-center mb-6 transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(251,50,50,0.5)]">
                   <HugeiconsIcon icon={s.icon} size={28} color="white" className="group-hover:scale-110 transition-transform duration-300" />
                 </div>
                 <h3 className="text-white text-2xl font-semibold mb-3 group-hover:text-orange-100 transition-colors duration-300">{s.title}</h3>
