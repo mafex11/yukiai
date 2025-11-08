@@ -123,3 +123,6 @@
 body{
   background-color: black;
 }
+button{
+  cursor: pointer;
+}
