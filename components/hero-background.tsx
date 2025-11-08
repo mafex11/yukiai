@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, ReactNode } from "react";
-import LaserFlow from './LaserFlow';
+import LaserFlow from "./LaserFlow";
 import { motion } from "framer-motion";
 
 interface HeroBackgroundProps {
@@ -12,12 +12,18 @@ export default function HeroBackground({ children }: HeroBackgroundProps) {
   const revealImgRef = useRef<HTMLImageElement | null>(null);
 
   return (
-    <div 
-      style={{ 
-        height: '100vh', 
-        position: 'relative', 
-        overflow: 'hidden',
-        backgroundColor: '#000000'
+    <div
+      style={{
+        height: "100vh",
+        position: "relative",
+        overflow: "hidden",
+        backgroundColor: "#000000",
+        backgroundImage: `
+          linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
+        `,
+        backgroundSize: "40px 40px",
+        backgroundPosition: "center center",
       }}
       onMouseMove={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -25,36 +31,48 @@ export default function HeroBackground({ children }: HeroBackgroundProps) {
         const y = e.clientY - rect.top;
         const el = revealImgRef.current;
         if (el) {
-          el.style.setProperty('--mx', `${x}px`);
-          el.style.setProperty('--my', `${y + rect.height * 0.5}px`);
+          el.style.setProperty("--mx", `${x}px`);
+          el.style.setProperty("--my", `${y + rect.height * 0.5}px`);
         }
       }}
       onMouseLeave={() => {
         const el = revealImgRef.current;
         if (el) {
-          el.style.setProperty('--mx', '-9999px');
-          el.style.setProperty('--my', '-9999px');
+          el.style.setProperty("--mx", "-9999px");
+          el.style.setProperty("--my", "-9999px");
         }
       }}
     >
+      {/* Laser Layer */}
       <LaserFlow
         className="hidden md:block"
         style={{}}
-        dpr={typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : 1}
-        horizontalBeamOffset={0.00}
-        verticalBeamOffset={-0.00}
+        dpr={typeof window !== "undefined" ? Math.min(window.devicePixelRatio || 1, 2) : 1}
+        horizontalBeamOffset={0.0}
+        verticalBeamOffset={-0.0}
         color="#FB3232"
       />
-      
+
+      {/* Glow Layer (optional, makes the grid glow softly) */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle at center, rgba(251,50,50,0.08) 0%, transparent 70%)",
+          mixBlendMode: "screen",
+        }}
+      />
+
+      {/* Image Container */}
       <motion.div
         className="absolute left-1/2 -translate-x-1/2 
-                   w-[90%] sm:w-[80%] md:w-[70%] lg:w-[55%] xl:w-[47%]
-                   top-[55%] sm:top-[52%] md:top-[50%]
-                   rounded-lg sm:rounded-xl md:rounded-2xl
-                   border border-red-500 sm:border-[1.5px] md:border-2
-                   flex items-center justify-center
-                   text-white z-[6]
-                   px-2 sm:px-3 md:px-0"
+                  w-[90%] sm:w-[80%] md:w-[70%] lg:w-[55%] xl:w-[47%]
+                  top-[55%] sm:top-[52%] md:top-[50%]
+                  rounded-lg sm:rounded-xl md:rounded-2xl
+                  border border-red-500 sm:border-[1.5px] md:border-2
+                  flex items-center justify-center
+                  text-white z-[6]
+                  px-2 sm:px-3 md:px-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.2, delay: 0.01 }}
@@ -64,8 +82,8 @@ export default function HeroBackground({ children }: HeroBackgroundProps) {
           src="/image3.png"
           alt="Yuki AI"
           className="w-full h-auto block 
-                     rounded-lg sm:rounded-xl md:rounded-2xl
-                     shadow-[0_10px_40px_rgba(251,50,50,0.3)]"
+                    rounded-lg sm:rounded-xl md:rounded-2xl
+                    shadow-[0_10px_40px_rgba(251,50,50,0.3)]"
         />
       </motion.div>
 
@@ -73,4 +91,3 @@ export default function HeroBackground({ children }: HeroBackgroundProps) {
     </div>
   );
 }
-

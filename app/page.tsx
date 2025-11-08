@@ -18,7 +18,7 @@ export default function YukiAI() {
 
   return (
     <>
-      <Hero/>
+      <Hero/> 
       {/* <DemoVideo /> */}
       <Features onOpen={setActiveFeature} />
       <AnimatePresence>
