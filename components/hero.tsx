@@ -6,9 +6,9 @@
   import { Button } from "@/components/ui/button";
   import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
   import { Input } from "@/components/ui/input";
-  import { ArrowRight } from "lucide-react";
+  import { ArrowRight, ArrowLeft,  } from "lucide-react";
   import { HugeiconsIcon } from "@hugeicons/react";
-  import { Loading01Icon, AccelerationIcon, Triangle02Icon, Loading03Icon } from "@hugeicons/core-free-icons";
+  import { Loading01Icon, AccelerationIcon, Triangle02Icon, Loading03Icon, ArrowTurnBackwardIcon } from "@hugeicons/core-free-icons";
 
   // Animation variants for staggered text reveal
   const containerVariants = {
@@ -152,7 +152,7 @@
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.2 }}
+                transition={{ duration: 0.3, delay: 0.3 }}
                 className="flex flex-col items-center gap-6 justify-center w-full min-h-[110px]"
               >
                 <AnimatePresence mode="wait">
@@ -162,26 +162,35 @@
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
                       onSubmit={(e) => { e.preventDefault(); }}
-                      className="w-full max-w-xl flex items-center gap-2"
+                      className="w-full max-w-xl flex items-center gap-2 px-8"
                     >
-                      <div className="relative w-full rounded-full">
+                      <Button
+                        type="button"
+                        variant="default"
+                        onClick={() => setShowForm(false)}
+                        className="h-14 px-4 rounded-full bg-zinc-950/90 border border-white/40 text-white hover:text-black hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,180,120,0.5)] transition-all duration-300 group whitespace-nowrap shrink-0"
+                      >
+                        <HugeiconsIcon icon={ArrowTurnBackwardIcon} className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
+                      </Button>
+                      <div className="relative flex-1 ">
                         <Input
                           placeholder="Enter Your Email To Join Waitlist"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           required
                           type="email"
-                          className="text-lg h-14 pl-6 pr-32 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/20 text-white placeholder:text-white/50 focus:border-orange-950/50 focus:bg-orange-950/50 focus:shadow-[0_0_30px_rgba(255,180,120,0.3)] transition-all duration-300"
+                          className="w-full text-lg h-14 pl-6 pr-4 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/20 text-white placeholder:text-white/50 focus:border-orange-950/50 focus:bg-orange-950/50 focus:shadow-[0_0_30px_rgba(255,180,120,0.3)] transition-all duration-300 placeholder:text-md"
                         />
-                        <Button
-                          type="submit"
-                          variant="default"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full p-0 bg-zinc-950/90 border border-white/40 text-white hover:text-black hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,180,120,0.5)] transition-all duration-300 group"
-                        >
-                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                        </Button>
                       </div>
+                      <Button
+                        type="submit"
+                        variant="default"
+                        className="h-14 px-4 rounded-full bg-zinc-950/90 border border-white/40 text-white hover:text-black hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,180,120,0.5)] transition-all duration-300 group whitespace-nowrap shrink-0"
+                      >
+                        <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                      </Button>
                     </motion.form>
                   ) : (
                     <motion.div
@@ -189,11 +198,13 @@
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      variants={containerVariants}
+                      transition={{ duration: 0.2 }}
                       className="flex items-center gap-4"
                     >
                       <motion.div
-                        variants={wordVariants}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2, delay: 0.1 }}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -202,36 +213,36 @@
                           onClick={() => setShowForm(true)}
                           className="h-14 px-7 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden"
                         >
-                          
                           <motion.div
                             initial={{ opacity: 0, rotate: -90 }}
                             animate={{ opacity: 1, rotate: 0 }}
-                            transition={{ duration: 0.4, delay: 1.4 }}
+                            transition={{ duration: 0.2, delay: 0.15 }}
                           >
                             <HugeiconsIcon 
                               icon={Loading03Icon}
                               className="transition-transform duration-300 group-hover:rotate-[90deg] "
                             />
-                            
                           </motion.div>
                           <motion.span
-                            initial={{ opacity: 0, x: -10 }}
+                            initial={{ opacity: 0, x: -5 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, delay: 1.5 }}
+                            transition={{ duration: 0.2, delay: 0.2 }}
                           >
                             Join Waitlist
                           </motion.span>
                           <motion.div
-                            initial={{ opacity: 0, x: -10 }}
+                            initial={{ opacity: 0, x: -5 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.3, delay: 1.6 }}
+                            transition={{ duration: 0.15, delay: 0.25 }}
                           >
-                            <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 " />
+                            <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:inline" />
                           </motion.div>
                         </Button>
                       </motion.div>
                       <motion.div
-                        variants={wordVariants}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2, delay: 0.15 }}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -240,25 +251,25 @@
                           className="h-14 px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden"
                         >
                           <motion.div
-                            initial={{ opacity: 0, x: -10, rotate: -30 }}
+                            initial={{ opacity: 0, x: -5, rotate: -30 }}
                             animate={{ opacity: 1, x: 0, rotate: 0 }}
-                            transition={{ duration: 0.4, delay: 1.7 }}
+                            transition={{ duration: 0.2, delay: 0.2 }}
                           >
                             <HugeiconsIcon icon={AccelerationIcon} size={20} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-[-30deg]" />
                           </motion.div>
                           <motion.span
-                            initial={{ opacity: 0, x: -10 }}
+                            initial={{ opacity: 0, x: -5 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, delay: 1.8 }}
+                            transition={{ duration: 0.2, delay: 0.25 }}
                           >
                             Pre Order Now
                           </motion.span>
                           <motion.div
-                            initial={{ opacity: 0, x: -10 }}
+                            initial={{ opacity: 0, x: -5 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.3, delay: 1.9 }}
+                            transition={{ duration: 0.15, delay: 0.3 }}
                           >
-                            <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:inline" />
                           </motion.div>
                         </Button>
                       </motion.div>

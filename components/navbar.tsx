@@ -243,7 +243,7 @@ export default function Navbar() {
         }}
       >
         <motion.div 
-          className="rounded-full border px-4 py-4 mx-4 transition-all duration-300 ease-out "
+          className="rounded-full border px-4 py-3 mx-4 transition-all duration-300 ease-out "
           style={{
             backdropFilter: `blur(${navbarStyles.backdropBlur}px)`,
             backgroundColor: `rgba(24, 24, 27, ${navbarStyles.backgroundOpacity})`,
@@ -389,8 +389,8 @@ export default function Navbar() {
             />
 
             <motion.div
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-zinc-950/95 backdrop-blur-2xl 
-                         border-l border-zinc-800/50 z-[70] md:hidden flex flex-col pt-[40px]"
+              className="fixed inset-0 bg-zinc-950/95 backdrop-blur-2xl 
+                         z-[70] md:hidden flex flex-col pt-[40px] overflow-hidden"
               initial={{ x: "100%", opacity: 0 }}
               animate={{ 
                 x: 0, 
@@ -415,19 +415,19 @@ export default function Navbar() {
               }}
             >
               {/* Header */}
-              <div className="flex items-center justify-end ">
+              <div className="flex items-center justify-end px-6">
                 <motion.button
                   onClick={() => setMobileMenuOpen(false)}
                   aria-label="Close menu"
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <X className="w-8 h-8 mr-9 text-white/80 hover:text-white transition-colors" />
+                  <X className="w-8 h-8 text-white/80 hover:text-white transition-colors" />
                 </motion.button>
               </div>
 
               {/* Navigation Links */}
-              <nav className="flex-1 p-6">
+              <nav className="flex-1 p-6 overflow-hidden min-h-0">
                 {navItems.map((link, index) => {
                   const linkId = link.toLowerCase().replace(/\s+/g, "-");
                   const isActive = activeSection === linkId;

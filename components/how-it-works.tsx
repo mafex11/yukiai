@@ -26,10 +26,23 @@ export default function HowItWorks() {
   return (
     <section id="how-it-works" className="w-full bg-zinc-950 py-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-3">How it works</h2>
-          <p className="text-white/70 text-lg">From voice to action in three steps</p>
-        </div>
+        <motion.div
+          className="text-center mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 
+            className="text-5xl sm:text-6xl lg:text-7xl font-normal text-white mb-2"
+            style={{
+              textShadow: '0 0 6px rgba(251,50,50,0.9), 0 0 14px rgba(251,50,50,0.9)',
+            }}
+          >
+            How it works
+          </h2>
+          <p className="text-white/70 text-2xl max-w-5xl mx-auto font-thin mb-20">From voice to action in three steps</p>
+        </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {steps.map((s, i) => (
             <motion.div
