@@ -202,6 +202,7 @@
                           onClick={() => setShowForm(true)}
                           className="h-14 px-7 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden"
                         >
+                          
                           <motion.div
                             initial={{ opacity: 0, rotate: -90 }}
                             animate={{ opacity: 1, rotate: 0 }}
@@ -211,6 +212,7 @@
                               icon={Loading03Icon}
                               className="transition-transform duration-300 group-hover:rotate-[90deg] "
                             />
+                            
                           </motion.div>
                           <motion.span
                             initial={{ opacity: 0, x: -10 }}
@@ -221,9 +223,8 @@
                           </motion.span>
                           <motion.div
                             initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 0, x: 0 }}
+                            animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.3, delay: 1.6 }}
-                            className="group-hover:opacity-100"
                           >
                             <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 " />
                           </motion.div>
@@ -250,13 +251,12 @@
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: 1.8 }}
                           >
-                            Get Demo
+                            Pre Order Now
                           </motion.span>
                           <motion.div
                             initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 0, x: 0 }}
+                            animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.3, delay: 1.9 }}
-                            className="group-hover:opacity-100"
                           >
                             <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                           </motion.div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence, useMotionValueEvent } from "framer-motion";
 import { ArrowRightIcon, X, Menu } from "lucide-react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import React, { useState, useEffect, useCallback, useRef } from "react";
@@ -17,6 +17,31 @@ export default function Navbar() {
   const isScrollingRef = useRef(false);
   
   const { scrollY, scrollYProgress } = useScroll();
+
+  // Scroll-based animations using useTransform
+  const navbarY = useTransform(scrollY, [0, 100], [0, -10]);
+  const navbarScale = useTransform(scrollY, [0, 100], [1, 0.95]);
+  
+  // Dynamic styles based on scroll
+  const [navbarStyles, setNavbarStyles] = useState({
+    backdropBlur: 12,
+    backgroundOpacity: 0.5,
+    borderOpacity: 0.9,
+    shadowOpacity: 0.3,
+  });
+
+  // Update navbar styles on scroll
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const scrollAmount = Math.min(latest, 100);
+    const progress = scrollAmount / 100;
+    
+    setNavbarStyles({
+      backdropBlur: 12 + progress * 8, // 12 to 20
+      backgroundOpacity: 0.5 + progress * 0.35, // 0.5 to 0.85
+      borderOpacity: 0.9 - progress * 0.3, // 0.9 to 0.6
+      shadowOpacity: 0.3 + progress * 0.5, // 0.3 to 0.8
+    });
+  });
 
   // Track active section and scroll state
   useEffect(() => {
@@ -200,18 +225,31 @@ export default function Navbar() {
     <>
       {/* Scroll progress bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-red-600 z-[100] origin-left"
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-900 to-red-500 z-[100] origin-left"
         style={{ scaleX: scrollYProgress }}
       />
 
       <motion.nav 
-        className="fixed top-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-[50%]"
+        className="fixed top-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-6xl "
+        style={{
+          y: navbarY,
+          scale: navbarScale,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 30,
+          mass: 0.5,
+        }}
       >
         <motion.div 
-          className={`backdrop-blur-xl rounded-full border transition-all duration-300 px-6 py-2.5 mx-4
-                     ${scrolled 
-                       ? "bg-zinc-950/70 border-zinc-800/60 shadow-[0_8px_30px_rgba(0,0,0,0.6)]" 
-                       : "bg-zinc-950/50 border-zinc-800/90 shadow-2xl"}`}
+          className="rounded-full border px-4 py-4 mx-4 transition-all duration-300 ease-out "
+          style={{
+            backdropFilter: `blur(${navbarStyles.backdropBlur}px)`,
+            backgroundColor: `rgba(24, 24, 27, ${navbarStyles.backgroundOpacity})`,
+            borderColor: `rgba(39, 39, 42, ${navbarStyles.borderOpacity})`,
+            boxShadow: `0 8px 30px rgba(0, 0, 0, ${navbarStyles.shadowOpacity * 0.3}), 0 0 300px 10px rgba(250, 50, 50, 0.8)`,
+          }}
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -225,25 +263,25 @@ export default function Navbar() {
               initial={{ x: -50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.0 }}
+              whileTap={{ scale: 1.0 }}
               aria-label="Scroll to top"
             >
               <motion.div
-                whileHover={{ rotate: 180, scale: 1.1 }}
+                whileHover={{ rotate: -30 }}
                 whileTap={{ scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                transition={{ type: "tween" }}
               >
                 <Image
                   src="/logowithoutbg.svg"
                   alt="Yuki AI Logo"
-                  width={24}
-                  height={24}
-                  className="text-white drop-shadow"
+                  width={45}
+                  height={45}
+                  className="text-white rounded-full"
                 />
               </motion.div>
               <motion.span 
-                className="text-white font-normal text-lg tracking-tight"
+                className="text-white font-thin text-xl tracking-tight"
               >
                 YukiAI
               </motion.span>
@@ -251,7 +289,7 @@ export default function Navbar() {
 
             {/* Desktop Navigation */}
             <motion.div 
-              className="hidden md:flex flex-1 items-center justify-center gap-6 font-normal text-base"
+              className="hidden md:flex flex-1 items-center justify-center gap-6 font-normal text-xl"
               initial={{ y: -30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.35, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
@@ -314,7 +352,7 @@ export default function Navbar() {
                 }
               }}>
                 <motion.div
-                  className="flex items-center gap-2 text-base whitespace-nowrap"
+                  className="flex items-center gap-2 text-xl whitespace-nowrap font-bold"
                   whileHover={{ x: 4 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -351,8 +389,8 @@ export default function Navbar() {
             />
 
             <motion.div
-              className="fixed top-0 right-0 h-full w-full max-w-sm bg-zinc-950/95 backdrop-blur-2xl 
-                         border-l border-zinc-800/50 z-[70] md:hidden flex flex-col"
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-zinc-950/95 backdrop-blur-2xl 
+                         border-l border-zinc-800/50 z-[70] md:hidden flex flex-col pt-[40px]"
               initial={{ x: "100%", opacity: 0 }}
               animate={{ 
                 x: 0, 
@@ -377,15 +415,14 @@ export default function Navbar() {
               }}
             >
               {/* Header */}
-              <div className="flex items-center justify-between p-2 border-b border-zinc-800/30">
-                <span className="text-white font-semibold text-lg">Menu</span>
+              <div className="flex items-center justify-end ">
                 <motion.button
                   onClick={() => setMobileMenuOpen(false)}
                   aria-label="Close menu"
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <X className="w-6 h-6 text-white/80 hover:text-white transition-colors" />
+                  <X className="w-8 h-8 mr-9 text-white/80 hover:text-white transition-colors" />
                 </motion.button>
               </div>
 

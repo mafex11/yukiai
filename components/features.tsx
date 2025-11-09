@@ -76,10 +76,7 @@ type FeaturesProps = {
 export default function Features({ onOpen }: FeaturesProps) {
   const [active, setActive] = useState<Feature | boolean | null>(null);
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const ref = useRef<HTMLDivElement>(null!);
-  const autoScrollRef = useRef<number | null>(null);
-  const pauseTimeoutRef = useRef<number | null>(null);
   const id = useId();
 
   const currentFeature = features[currentFeatureIndex];
@@ -99,58 +96,16 @@ export default function Features({ onOpen }: FeaturesProps) {
 
   useOutsideClick(ref, () => setActive(null));
 
-  useEffect(() => {
-    if (isPaused) {
-      if (autoScrollRef.current) {
-        clearInterval(autoScrollRef.current);
-        autoScrollRef.current = null;
-      }
-      return;
-    }
-
-    autoScrollRef.current = window.setInterval(() => {
-      setCurrentFeatureIndex((prev) => (prev + 1) % features.length);
-    }, 4000);
-
-    return () => {
-      if (autoScrollRef.current) {
-        clearInterval(autoScrollRef.current);
-      }
-      if (pauseTimeoutRef.current) {
-        clearTimeout(pauseTimeoutRef.current);
-      }
-    };
-  }, [isPaused]);
-
   const nextFeature = () => {
     setCurrentFeatureIndex((prev) => (prev + 1) % features.length);
-    setIsPaused(true);
-    if (pauseTimeoutRef.current) {
-      clearTimeout(pauseTimeoutRef.current);
-    }
-    pauseTimeoutRef.current = window.setTimeout(() => setIsPaused(false), 8000);
   };
 
   const prevFeature = () => {
     setCurrentFeatureIndex((prev) => (prev - 1 + features.length) % features.length);
-    setIsPaused(true);
-    if (pauseTimeoutRef.current) {
-      clearTimeout(pauseTimeoutRef.current);
-    }
-    pauseTimeoutRef.current = window.setTimeout(() => setIsPaused(false), 8000);
-  };
-
-  const goToFeature = (index: number) => {
-    setCurrentFeatureIndex(index);
-    setIsPaused(true);
-    if (pauseTimeoutRef.current) {
-      clearTimeout(pauseTimeoutRef.current);
-    }
-    pauseTimeoutRef.current = window.setTimeout(() => setIsPaused(false), 8000);
   };
 
   const renderIcon = (index: number) => {
-    const iconCommon = { size: 22, color: "white" } as const;
+    const iconCommon = { size: 20, color: "white" } as const;
     switch (index) {
       case 0:
         return <HugeiconsIcon icon={AiEditingIcon} {...iconCommon} />;
@@ -176,15 +131,29 @@ export default function Features({ onOpen }: FeaturesProps) {
   };
 
   return (
-    <section id="services" className="w-full relative bg-black py-12 overflow-hidden">
-      <div
+    <section id="services" className="w-full relative bg-black py-12 overflow-hidden pt-40">
+      {/* <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background:
             "radial-gradient(ellipse 120% 90% at 50% 100%, rgba(255, 80, 120, 0.18), transparent 80%)",
         }}
-      />
-      <div className="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      /> */}
+  <div
+    className="absolute inset-0 z-0 pointer-events-none"
+    style={{
+      background: `
+        radial-gradient(
+          circle at center,
+          rgba(244, 63, 94, 0.12) 20%,
+          rgba(244, 63, 94, 0.06) 50%,
+          rgba(0, 0, 0, 0.0) 80%
+        )
+      `,
+    }}
+  />
+
+      <div className="w-full px-4 sm:px-4 lg:px-0 max-w-7xl mx-auto">
         <motion.div
           className="text-center mb-8"
           initial={{ opacity: 0, y: 20 }}
@@ -192,15 +161,19 @@ export default function Features({ onOpen }: FeaturesProps) {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white mb-2">Powerful Features</h2>
-          <p className="text-white/70 text-base max-w-2xl mx-auto">Everything you need to automate and control your Windows device</p>
+          <h2 
+            className="text-5xl sm:text-6xl lg:text-7xl font-normal text-white mb-2"
+            style={{
+              textShadow: '0 0 6px rgba(251,50,50,0.9), 0 0 14px rgba(251,50,50,0.9)',
+            }}
+          >
+            Powerful Features
+          </h2>
+          <p className="text-white/70 text-2xl max-w-5xl mx-auto font-thin mb-20">Everything you need to automate and control your Windows device</p>
         </motion.div>
 
-        {/* Full-width feature with navigation */}
         <div 
-          className="relative mb-8"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
+          className="relative mb-8 max-w-5xl mx-auto"
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -213,15 +186,10 @@ export default function Features({ onOpen }: FeaturesProps) {
             >
               {/* Image container */}
               <div
-                onClick={() =>
-                  onOpen
-                    ? onOpen({ ...currentFeature, src: featureImages[currentFeatureIndex] })
-                    : setActive({ ...currentFeature, src: featureImages[currentFeatureIndex] })
-                }
-                className="w-full bg-gradient-to-br from-zinc-950/80 to-zinc-900/80 rounded-2xl border border-white/10 overflow-hidden cursor-pointer hover:border-white/30 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 group relative"
+                className="w-full bg-gradient-to-br from-zinc-950/80 to-zinc-900/80 rounded-3xl border border-white/10 overflow-hidden hover:border-white/30 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 group relative"
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="relative w-full aspect-[21/9] bg-zinc-900 overflow-hidden">
+                <div className="relative w-full aspect-video bg-zinc-900 overflow-hidden">
                   <img
                     src={featureImages[currentFeatureIndex] ?? "/image.png"}
                     alt={currentFeature.title}
@@ -233,60 +201,40 @@ export default function Features({ onOpen }: FeaturesProps) {
 
               {/* Title and content container */}
               <div
-                onClick={() =>
-                  onOpen
-                    ? onOpen({ ...currentFeature, src: featureImages[currentFeatureIndex] })
-                    : setActive({ ...currentFeature, src: featureImages[currentFeatureIndex] })
-                }
-                className="w-full bg-gradient-to-br from-zinc-950/70 to-zinc-900/70 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden cursor-pointer hover:border-white/30 hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-500 group"
+                className="w-full bg-gradient-to-br from-zinc-950/70 to-zinc-900/70 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden hover:border-white/10 hover:shadow-[0_0_80px_rgba(250,50,50,0.1)] transition-all duration-500 group"
               >
-                <div className="p-6 lg:p-8 flex flex-col relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
-                  <div className="flex items-center gap-3 mb-4 relative z-10">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/40 flex items-center justify-center shrink-0 group-hover:border-orange-500/50 group-hover:shadow-lg group-hover:shadow-orange-500/20 transition-all duration-300">
+                <div className="p-5 lg:p-6 flex flex-col relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[rgba(250,50,50,0.05)] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
+                  <div className="flex items-center gap-3 mb-3 relative z-10">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/20 flex items-center justify-center shrink-0 transition-all duration-300">
                       {renderIcon(currentFeatureIndex)}
                     </div>
-                    <h3 className="text-white font-semibold text-2xl lg:text-3xl group-hover:text-orange-100 transition-colors duration-300">{currentFeature.title}</h3>
+                    <h3 className="text-white font-semibold text-xl lg:text-2xl group-hover:text-orange-100 transition-colors duration-300">{currentFeature.title}</h3>
                   </div>
-                  <p className="text-white/70 text-base lg:text-lg leading-relaxed group-hover:text-white/80 transition-colors duration-300 relative z-10">{currentFeature.description}</p>
+                  <p className="text-white/70 text-sm lg:text-base leading-relaxed group-hover:text-white/80 transition-colors duration-300 relative z-10">{currentFeature.description}</p>
                 </div>
               </div>
             </motion.div>
           </AnimatePresence>
 
           {/* Navigation buttons */}
-          <button
-            type="button"
-            aria-label="Previous feature"
-            onClick={prevFeature}
-            className="absolute -left-8 lg:-left-12 top-1/2 -translate-y-1/2 h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 hover:bg-[rgba(251,50,50,0.5)] border border-white/40 hover:border-[rgba(251,50,50,0.5)] backdrop-blur-md text-white z-10 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-[rgba(251,50,50,0.3)] flex items-center justify-center group"
-          >
-            <HugeiconsIcon icon={ArrowLeft02Icon} size={20} className="group-hover:text-white transition-colors duration-300" />
-          </button>
-          <button
-            type="button"
-            aria-label="Next feature"
-            onClick={nextFeature}
-            className="absolute -right-8 lg:-right-12 top-1/2 -translate-y-1/2 h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 hover:bg-[rgba(251,50,50,0.5)] border border-white/40 hover:border-[rgba(251,50,50,0.5)] backdrop-blur-md text-white z-10 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-[rgba(251,50,50,0.3)] flex items-center justify-center group"
-          >
-            <HugeiconsIcon icon={ArrowRight02Icon} size={20} className="group-hover:text-white transition-colors duration-300" />
-          </button>
-
-          {/* Feature indicators */}
-          <div className="mt-4 flex items-center justify-center gap-2">
-            {features.map((_, index) => (
-              <button
-                key={`indicator-${index}`}
-                type="button"
-                aria-label={`Go to feature ${index + 1}`}
-                onClick={() => goToFeature(index)}
-                className={`transition-all duration-300 rounded-full ${
-                  index === currentFeatureIndex
-                    ? "h-2.5 w-10 bg-[rgba(251,50,50,0.8)] shadow-lg shadow-[rgba(251,50,50,0.4)]"
-                    : "h-2 w-2 bg-white/40 hover:bg-[rgba(251,50,50,0.5)] hover:scale-125"
-                }`}
-              />
-            ))}
+          <div className="mt-4 flex items-center justify-center gap-6">
+            <button
+              type="button"
+              aria-label="Previous feature"
+              onClick={prevFeature}
+              className="h-16 w-16 rounded-full bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 hover:bg-[rgba(251,50,50,0.5)] border border-white/40 hover:border-[rgba(251,50,50,0.5)] backdrop-blur-md text-white transition-all duration-300 hover:scale-110 shadow-lg shadow-[rgba(251,50,50,0.3)] flex items-center justify-center group text-2xl"
+            >
+              <HugeiconsIcon icon={ArrowLeft02Icon} size={36} className="group-hover:text-white transition-colors duration-300" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next feature"
+              onClick={nextFeature}
+              className="h-16 w-16 rounded-full bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 hover:bg-[rgba(251,50,50,0.5)] border border-white/40 hover:border-[rgba(251,50,50,0.5)] backdrop-blur-md text-white transition-all duration-300 hover:scale-110 shadow-lg shadow-[rgba(251,50,50,0.3)] flex items-center justify-center group text-2xl"
+            >
+              <HugeiconsIcon icon={ArrowRight02Icon} size={36} className="group-hover:text-white transition-colors duration-300" />
+            </button>
           </div>
         </div>
       </div>
