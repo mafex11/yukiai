@@ -6,7 +6,7 @@ import { ArrowRightIcon, X, Menu } from "lucide-react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
-const navItems = ["Services",  "Pricing", "How It Works","FAQ","Contact"];
+const navItems = ["Services",  "Pricing", "How It Works","FAQ"];
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -458,10 +458,8 @@ export default function Navbar() {
                     </motion.a>
                   );
                 })}
-              </nav>
-
-              {/* CTA */}
-              <div className="p-6 border-t border-zinc-800/30">
+                {/* CTA */}
+              <div className="p-6 border-t border-zinc-800/30 absolute right-0">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -496,6 +494,9 @@ export default function Navbar() {
                   </HoverBorderGradient>
                 </motion.div>
               </div>
+              </nav>
+
+              
             </motion.div>
           </>
         )}

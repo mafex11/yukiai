@@ -37,6 +37,8 @@
   export default function Hero() {
     const [email, setEmail] = useState("");
     const [showForm, setShowForm] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
     const rotatingPhrases = [
       "help me with this",
       "email bob to ask for leave tomorrow",
@@ -163,34 +165,97 @@
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      onSubmit={(e) => { e.preventDefault(); }}
-                      className="w-full max-w-xl flex items-center gap-2 px-8"
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+                        if (!email || isSubmitting) return;
+
+                        setIsSubmitting(true);
+                        setSubmitStatus(null);
+
+                        try {
+                          const response = await fetch('/api/waitlist', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ email }),
+                          });
+
+                          if (response.ok) {
+                            setSubmitStatus('success');
+                            setEmail('');
+                            setTimeout(() => {
+                              setShowForm(false);
+                              setSubmitStatus(null);
+                            }, 2000);
+                          } else {
+                            setSubmitStatus('error');
+                          }
+                        } catch (error) {
+                          console.error('Error submitting email:', error);
+                          setSubmitStatus('error');
+                        } finally {
+                          setIsSubmitting(false);
+                        }
+                      }}
+                      className="w-full max-w-xl flex flex-col items-center gap-2 px-8"
                     >
-                      <Button
-                        type="button"
-                        variant="default"
-                        onClick={() => setShowForm(false)}
-                        className="h-14 px-4 rounded-full bg-zinc-950/90 border border-white/40 text-white hover:text-black hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,180,120,0.5)] transition-all duration-300 group whitespace-nowrap shrink-0"
-                      >
-                        <HugeiconsIcon icon={ArrowTurnBackwardIcon} className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
-                      </Button>
-                      <div className="relative flex-1 ">
-                        <Input
-                          placeholder="Enter Your Email To Join Waitlist"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                          type="email"
-                          className="w-full lg:text-lg text-sm h-14 pl-6 pr-4 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/20 text-white placeholder:text-white/50 focus:border-orange-950/50 focus:bg-orange-950/50 focus:shadow-[0_0_30px_rgba(255,180,120,0.3)] transition-all duration-300 placeholder:text-md"
-                        />
+                      <div className="w-full flex items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="default"
+                          onClick={() => {
+                            setShowForm(false);
+                            setEmail('');
+                            setSubmitStatus(null);
+                          }}
+                          disabled={isSubmitting}
+                          className="h-14 px-4 rounded-full bg-zinc-950/90 border border-white/40 text-white hover:text-black hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,180,120,0.5)] transition-all duration-300 group whitespace-nowrap shrink-0 disabled:opacity-50"
+                        >
+                          <HugeiconsIcon icon={ArrowTurnBackwardIcon} className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
+                        </Button>
+                        <div className="relative flex-1">
+                          <Input
+                            placeholder="Enter Your Email To Join Waitlist"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            type="email"
+                            disabled={isSubmitting}
+                            className="w-full lg:text-lg text-sm h-14 pl-6 pr-4 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/20 text-white placeholder:text-white/50 focus:border-orange-950/50 focus:bg-orange-950/50 focus:shadow-[0_0_30px_rgba(255,180,120,0.3)] transition-all duration-300 placeholder:text-md disabled:opacity-50"
+                          />
+                        </div>
+                        <Button
+                          type="submit"
+                          variant="default"
+                          disabled={isSubmitting || !email}
+                          className="h-14 px-4 rounded-full bg-zinc-950/90 border border-white/40 text-white hover:text-black hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,180,120,0.5)] transition-all duration-300 group whitespace-nowrap shrink-0 disabled:opacity-50"
+                        >
+                          {isSubmitting ? (
+                            <HugeiconsIcon icon={Loading03Icon} className="h-5 w-5 animate-spin" />
+                          ) : (
+                            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                          )}
+                        </Button>
                       </div>
-                      <Button
-                        type="submit"
-                        variant="default"
-                        className="h-14 px-4 rounded-full bg-zinc-950/90 border border-white/40 text-white hover:text-black hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,180,120,0.5)] transition-all duration-300 group whitespace-nowrap shrink-0"
-                      >
-                        <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                      </Button>
+                      {submitStatus === 'success' && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-green-400 text-sm mt-2"
+                        >
+                          Successfully joined waitlist!
+                        </motion.p>
+                      )}
+                      {submitStatus === 'error' && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-red-400 text-sm mt-2"
+                        >
+                          Failed to join waitlist. Please try again.
+                        </motion.p>
+                      )}
                     </motion.form>
                   ) : (
                     <motion.div
