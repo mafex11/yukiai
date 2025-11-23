@@ -181,7 +181,7 @@
                           onChange={(e) => setEmail(e.target.value)}
                           required
                           type="email"
-                          className="w-full text-lg h-14 pl-6 pr-4 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/20 text-white placeholder:text-white/50 focus:border-orange-950/50 focus:bg-orange-950/50 focus:shadow-[0_0_30px_rgba(255,180,120,0.3)] transition-all duration-300 placeholder:text-md"
+                          className="w-full lg:text-lg text-sm h-14 pl-6 pr-4 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/20 text-white placeholder:text-white/50 focus:border-orange-950/50 focus:bg-orange-950/50 focus:shadow-[0_0_30px_rgba(255,180,120,0.3)] transition-all duration-300 placeholder:text-md"
                         />
                       </div>
                       <Button
@@ -248,8 +248,10 @@
                       >
                         <Button
                           variant="outline"
+                          asChild
                           className="h-14 px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden"
                         >
+                          <a href="https://rzp.io/rzp/NuYjrpJa" target="_blank" rel="noopener noreferrer">
                           <motion.div
                             initial={{ opacity: 0, x: -5, rotate: -30 }}
                             animate={{ opacity: 1, x: 0, rotate: 0 }}
@@ -271,6 +273,7 @@
                           >
                             <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:inline" />
                           </motion.div>
+                          </a>
                         </Button>
                       </motion.div>
                     </motion.div>

@@ -43,8 +43,15 @@ export default function FAQ() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-3">FAQ</h2>
-          <p className="text-white/70 text-lg">Answers to common questions</p>
+          <h2 
+            className="text-5xl sm:text-6xl lg:text-7xl font-normal text-white mb-2"
+            style={{
+              textShadow: '0 0 6px rgba(251,50,50,0.9), 0 0 14px rgba(251,50,50,0.9)',
+            }}
+          >
+            FAQ
+          </h2>
+          <p className="text-white/70 text-2xl max-w-5xl mx-auto font-thin mb-20">Answers to common questions</p>
         </motion.div>
         <div className="divide-y divide-white/10 rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-950/80 to-zinc-900/80 backdrop-blur-xl overflow-hidden shadow-2xl">
           {qas.map((item, idx) => {

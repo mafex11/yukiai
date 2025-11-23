@@ -19,15 +19,12 @@ export type Feature = {
 };
 
 const featureImages: string[] = [
-  "/image.png",
-  "/image3.png",
-  "/next.svg",
-  "/vercel.svg",
-  "/globe.svg",
-  "/window.svg",
-  "/file.svg",
-  "/image.png",
-  "/image3.png",
+  "/GUIAutomation.png",  // Windows GUI Automation
+  "/image3.png",          // Voice Control
+  "/Shell.png",           // Command Execution
+  "/Tools.png",           // 17 Automation Tools
+  "/Memory.png",          // Memory & Context
+  "/Task.png",            // Task Scheduling and Reminders
 ];
 
 const features: Feature[] = [
@@ -51,22 +48,22 @@ const features: Feature[] = [
     title: "Memory & Context",
     description: "Remembers conversation history and maintains context across tasks.",
   },
-  {
-    title: "Program Usage Tracking",
-    description: "Monitor and track application usage patterns.",
-  },
+  // {
+  //   title: "Program Usage Tracking",
+  //   description: "Monitor and track application usage patterns.",
+  // },
   {
     title: "Task Scheduling and Reminders",
     description: "Schedule tasks and set reminders for better productivity.",
   },
-  {
-    title: "Focus Suggestions",
-    description: "Get intelligent suggestions to help maintain focus.",
-  },
-  {
-    title: "Proactive Interruptions",
-    description: "Smart notification system that adapts to your workflow.",
-  },
+  // {
+  //   title: "Focus Suggestions",
+  //   description: "Get intelligent suggestions to help maintain focus.",
+  // },
+  // {
+  //   title: "Proactive Interruptions",
+  //   description: "Smart notification system that adapts to your workflow.",
+  // },
 ];
 
 type FeaturesProps = {
@@ -118,13 +115,17 @@ export default function Features({ onOpen }: FeaturesProps) {
       case 4:
         return <HugeiconsIcon icon={Brain02Icon} {...iconCommon} />;
       case 5:
-        return <HugeiconsIcon icon={AircraftGameIcon} {...iconCommon} />;
-      case 6:
         return <HugeiconsIcon icon={TaskDaily02Icon} {...iconCommon} />;
-      case 7:
-        return <HugeiconsIcon icon={FocusPointIcon} {...iconCommon} />;
-      case 8:
-        return <HugeiconsIcon icon={AppleVisionProIcon} {...iconCommon} />;
+      // case 5 (commented out - Program Usage Tracking):
+      //   return <HugeiconsIcon icon={AircraftGameIcon} {...iconCommon} />;
+      // case 7 (commented out - Focus Suggestions):
+      //   return <HugeiconsIcon icon={FocusPointIcon} {...iconCommon} />;
+      // case 8 (commented out - Proactive Interruptions):
+      //   return <HugeiconsIcon icon={AppleVisionProIcon} {...iconCommon} />;
+      // case 7:
+      //   return <HugeiconsIcon icon={FocusPointIcon} {...iconCommon} />;
+      // case 8:
+      //   return <HugeiconsIcon icon={AppleVisionProIcon} {...iconCommon} />;
       default:
         return null;
     }
@@ -193,7 +194,7 @@ export default function Features({ onOpen }: FeaturesProps) {
                   <img
                     src={featureImages[currentFeatureIndex] ?? "/image.png"}
                     alt={currentFeature.title}
-                    className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
+                    className="absolute inset-0 w-full h-full object-contain object-center"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-transparent" />
                 </div>
@@ -270,7 +271,7 @@ export default function Features({ onOpen }: FeaturesProps) {
                   <img
                     src={active.src ?? "/image.png"}
                     alt={active.title}
-                    className="absolute inset-0 w-full h-full object-cover object-center"
+                    className="absolute inset-0 w-full h-full object-contain object-center"
                   />
                 </div>
               </motion.div>
