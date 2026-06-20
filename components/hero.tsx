@@ -264,7 +264,7 @@
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="flex items-center gap-4"
+                      className="flex flex-col sm:flex-row items-center gap-4"
                     >
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}

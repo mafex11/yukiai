@@ -60,7 +60,7 @@ export default function FinalCTA() {
         <p className="text-white/70 text-2xl max-w-5xl mx-auto font-thin mb-8">Join the waitlist or try the demo today.</p>
         
         {!showForm ? (
-          <div className="flex items-center justify-center gap-4 flex-wrap">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
               variant="default"
               onClick={() => setShowForm(true)}
