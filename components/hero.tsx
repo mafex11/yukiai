@@ -264,7 +264,7 @@
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="flex flex-col sm:flex-row items-center gap-4"
+                      className="flex items-center gap-3 sm:gap-4"
                     >
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -276,7 +276,7 @@
                         <Button
                           variant="default"
                           onClick={() => setShowForm(true)}
-                          className="h-14 px-7 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden"
+                          className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden text-sm sm:text-base"
                         >
                           <motion.div
                             initial={{ opacity: 0, rotate: -90 }}
@@ -314,7 +314,7 @@
                         <Button
                           variant="outline"
                           asChild
-                          className="h-14 px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden"
+                          className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden text-sm sm:text-base"
                         >
                           <a href="https://rzp.io/rzp/NuYjrpJa" target="_blank" rel="noopener noreferrer">
                           <motion.div

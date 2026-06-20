@@ -60,11 +60,11 @@ export default function FinalCTA() {
         <p className="text-white/70 text-2xl max-w-5xl mx-auto font-thin mb-8">Join the waitlist or try the demo today.</p>
         
         {!showForm ? (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-3 sm:gap-4">
             <Button
               variant="default"
               onClick={() => setShowForm(true)}
-              className="h-14 px-7 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group"
+              className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group text-sm sm:text-base"
             >
               <HugeiconsIcon 
                 icon={Loading03Icon}
@@ -76,7 +76,7 @@ export default function FinalCTA() {
             <Button
               variant="outline"
               asChild
-              className="h-14 px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group"
+              className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group text-sm sm:text-base"
             >
               <a href="https://rzp.io/rzp/NuYjrpJa" target="_blank" rel="noopener noreferrer">
                 <HugeiconsIcon icon={AccelerationIcon} size={20} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-[-30deg]" />
