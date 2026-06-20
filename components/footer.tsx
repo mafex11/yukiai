@@ -47,10 +47,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom tagline */}
-        <div className="mt-14 mb-20 ">
-          {/* <p className="text-white/80 text-lg md:text-3xl">Transforming vision into reality.</p> */}
-        </div>
       </div>
     </footer>
   );

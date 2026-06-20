@@ -230,7 +230,7 @@ export default function Navbar() {
       />
 
       <motion.nav 
-        className="fixed top-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-6xl "
+        className="fixed top-3 md:top-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-6xl "
         style={{
           y: navbarY,
           scale: navbarScale,
