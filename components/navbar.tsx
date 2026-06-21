@@ -6,7 +6,7 @@ import { ArrowRightIcon, X, Menu } from "lucide-react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
-const navItems = ["Services",  "Pricing", "How It Works","FAQ"];
+const navItems = ["Services", "Download", "Pricing", "How It Works", "FAQ"];
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

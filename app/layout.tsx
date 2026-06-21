@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Yuki",
-  description: "Your intelligent AI assistant for modern development",
+  title: "Yuki AI — Agentic Assistant for macOS and Windows",
+  description: "AI assistant that controls and automates your Mac or PC with voice commands and natural language.",
 };
 
 export default function RootLayout({

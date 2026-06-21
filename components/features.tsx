@@ -1,97 +1,70 @@
 "use client";
 
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useOutsideClick } from "@/hooks/use-outside-click";
 import { AiEditingIcon, AiVoiceIcon, CommandLineIcon, AccelerationIcon } from "@hugeicons/core-free-icons";
-import { AircraftGameIcon } from "@hugeicons/core-free-icons";
 import { TaskDaily02Icon } from "@hugeicons/core-free-icons";
-import { FocusPointIcon } from "@hugeicons/core-free-icons";
-import { AppleVisionProIcon } from "@hugeicons/core-free-icons";
 import { Brain02Icon } from "@hugeicons/core-free-icons";
 import { ArrowRight02Icon, ArrowLeft02Icon } from "@hugeicons/core-free-icons";
+import { Monitor, Apple } from "lucide-react";
 
 export type Feature = {
   title: string;
   description: string;
   src?: string;
+  platform: "macos" | "windows" | "both";
 };
 
 const featureImages: string[] = [
-  "/GUIAutomation.png",  // Windows GUI Automation
-  "/image3.png",          // Voice Control
-  "/Shell.png",           // Command Execution
-  "/Tools.png",           // 17 Automation Tools
-  "/Memory.png",          // Memory & Context
-  "/Task.png",            // Task Scheduling and Reminders
+  "/GUIAutomation.png",
+  "/image3.png",
+  "/Shell.png",
+  "/Tools.png",
+  "/Memory.png",
+  "/Task.png",
 ];
 
 const features: Feature[] = [
   {
-    title: "Windows GUI Automation",
-    description: "No computer vision; uses Windows UI Automation to interact with GUI elements.",
+    title: "Native OS Automation",
+    description: "macOS uses Accessibility APIs; Windows uses UI Automation — no computer vision needed for native app control.",
+    platform: "both",
   },
   {
     title: "Voice Control",
-    description: 'Trigger word detection ("yuki") with STT/TTS for voice commands.',
+    description: 'Say "Yuki" or press a hotkey to start. STT/TTS for hands-free operation on both platforms.',
+    platform: "both",
   },
   {
     title: "Command Execution",
-    description: "Execute commands with shell and system commands.",
+    description: "Execute shell commands, launch apps, manage files — full system-level access.",
+    platform: "both",
   },
   {
-    title: "17 Automation Tools",
-    description: "Click, type, scroll, launch, drag, move, shortcuts, keys, wait, clipboard, shell, system, scrape, human, switch, resize, done.",
+    title: "17+ Automation Tools",
+    description: "Click, type, scroll, launch, drag, move, shortcuts, keys, clipboard, shell, system, and more.",
+    platform: "windows",
   },
   {
     title: "Memory & Context",
-    description: "Remembers conversation history and maintains context across tasks.",
+    description: "Remembers who you are, your preferences, and conversation history across sessions.",
+    platform: "both",
   },
-  // {
-  //   title: "Program Usage Tracking",
-  //   description: "Monitor and track application usage patterns.",
-  // },
   {
-    title: "Task Scheduling and Reminders",
-    description: "Schedule tasks and set reminders for better productivity.",
+    title: "Task Scheduling",
+    description: "Schedule tasks, set reminders, and automate recurring workflows.",
+    platform: "both",
   },
-  // {
-  //   title: "Focus Suggestions",
-  //   description: "Get intelligent suggestions to help maintain focus.",
-  // },
-  // {
-  //   title: "Proactive Interruptions",
-  //   description: "Smart notification system that adapts to your workflow.",
-  // },
 ];
 
-type FeaturesProps = {
+export type FeaturesProps = {
   onOpen?: (feature: Feature) => void;
 };
 
 export default function Features({ onOpen }: FeaturesProps) {
-  const [active, setActive] = useState<Feature | boolean | null>(null);
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
-  const ref = useRef<HTMLDivElement>(null!);
-  const id = useId();
-
   const currentFeature = features[currentFeatureIndex];
-
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setActive(false);
-    }
-    if (!onOpen && active && typeof active === "object") {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [active, onOpen]);
-
-  useOutsideClick(ref, () => setActive(null));
 
   const nextFeature = () => {
     setCurrentFeatureIndex((prev) => (prev + 1) % features.length);
@@ -104,55 +77,46 @@ export default function Features({ onOpen }: FeaturesProps) {
   const renderIcon = (index: number) => {
     const iconCommon = { size: 20, color: "white" } as const;
     switch (index) {
-      case 0:
-        return <HugeiconsIcon icon={AiEditingIcon} {...iconCommon} />;
-      case 1:
-        return <HugeiconsIcon icon={AiVoiceIcon} {...iconCommon} />;
-      case 2:
-        return <HugeiconsIcon icon={CommandLineIcon} {...iconCommon} />;
-      case 3:
-        return <HugeiconsIcon icon={AccelerationIcon} {...iconCommon} />;
-      case 4:
-        return <HugeiconsIcon icon={Brain02Icon} {...iconCommon} />;
-      case 5:
-        return <HugeiconsIcon icon={TaskDaily02Icon} {...iconCommon} />;
-      // case 5 (commented out - Program Usage Tracking):
-      //   return <HugeiconsIcon icon={AircraftGameIcon} {...iconCommon} />;
-      // case 7 (commented out - Focus Suggestions):
-      //   return <HugeiconsIcon icon={FocusPointIcon} {...iconCommon} />;
-      // case 8 (commented out - Proactive Interruptions):
-      //   return <HugeiconsIcon icon={AppleVisionProIcon} {...iconCommon} />;
-      // case 7:
-      //   return <HugeiconsIcon icon={FocusPointIcon} {...iconCommon} />;
-      // case 8:
-      //   return <HugeiconsIcon icon={AppleVisionProIcon} {...iconCommon} />;
-      default:
-        return null;
+      case 0: return <HugeiconsIcon icon={AiEditingIcon} {...iconCommon} />;
+      case 1: return <HugeiconsIcon icon={AiVoiceIcon} {...iconCommon} />;
+      case 2: return <HugeiconsIcon icon={CommandLineIcon} {...iconCommon} />;
+      case 3: return <HugeiconsIcon icon={AccelerationIcon} {...iconCommon} />;
+      case 4: return <HugeiconsIcon icon={Brain02Icon} {...iconCommon} />;
+      case 5: return <HugeiconsIcon icon={TaskDaily02Icon} {...iconCommon} />;
+      default: return null;
     }
   };
 
+  const PlatformBadge = ({ platform }: { platform: string }) => (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/10 text-white/70 text-xs">
+      {platform === "both" ? (
+        <>
+          <Apple className="w-3 h-3" />
+          <Monitor className="w-3 h-3" />
+          Both
+        </>
+      ) : platform === "macos" ? (
+        <>
+          <Apple className="w-3 h-3" />
+          macOS
+        </>
+      ) : (
+        <>
+          <Monitor className="w-3 h-3" />
+          Windows
+        </>
+      )}
+    </span>
+  );
+
   return (
     <section id="services" className="w-full relative bg-black py-12 overflow-hidden pt-40">
-      {/* <div
-        className="pointer-events-none absolute inset-0 z-0"
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
         style={{
-          background:
-            "radial-gradient(ellipse 120% 90% at 50% 100%, rgba(255, 80, 120, 0.18), transparent 80%)",
+          background: `radial-gradient(circle at center, rgba(244, 63, 94, 0.12) 20%, rgba(244, 63, 94, 0.06) 50%, rgba(0, 0, 0, 0.0) 80%)`,
         }}
-      /> */}
-  <div
-    className="absolute inset-0 z-0 pointer-events-none"
-    style={{
-      background: `
-        radial-gradient(
-          circle at center,
-          rgba(244, 63, 94, 0.12) 20%,
-          rgba(244, 63, 94, 0.06) 50%,
-          rgba(0, 0, 0, 0.0) 80%
-        )
-      `,
-    }}
-  />
+      />
 
       <div className="w-full px-4 sm:px-4 lg:px-0 max-w-7xl mx-auto">
         <motion.div
@@ -162,7 +126,7 @@ export default function Features({ onOpen }: FeaturesProps) {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 
+          <h2
             className="text-5xl sm:text-6xl lg:text-7xl font-normal text-white mb-2"
             style={{
               textShadow: '0 0 6px rgba(251,50,50,0.9), 0 0 14px rgba(251,50,50,0.9)',
@@ -170,12 +134,12 @@ export default function Features({ onOpen }: FeaturesProps) {
           >
             Powerful Features
           </h2>
-          <p className="text-white/70 text-2xl max-w-5xl mx-auto font-thin mb-20">Everything you need to automate and control your Windows device</p>
+          <p className="text-white/70 text-xl sm:text-2xl max-w-5xl mx-auto font-thin mb-20">
+            Everything you need to automate and control your device
+          </p>
         </motion.div>
 
-        <div 
-          className="relative mb-8 max-w-5xl mx-auto"
-        >
+        <div className="relative mb-8 max-w-5xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentFeatureIndex}
@@ -186,9 +150,7 @@ export default function Features({ onOpen }: FeaturesProps) {
               className="flex flex-col gap-4"
             >
               {/* Image container */}
-              <div
-                className="w-full bg-gradient-to-br from-zinc-950/80 to-zinc-900/80 rounded-3xl border border-white/10 overflow-hidden hover:border-white/30 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 group relative"
-              >
+              <div className="w-full bg-gradient-to-br from-zinc-950/80 to-zinc-900/80 rounded-3xl border border-white/10 overflow-hidden hover:border-white/30 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 group relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative w-full aspect-video bg-zinc-900 overflow-hidden">
                   <img
@@ -201,18 +163,21 @@ export default function Features({ onOpen }: FeaturesProps) {
               </div>
 
               {/* Title and content container */}
-              <div
-                className="w-full bg-gradient-to-br from-zinc-950/70 to-zinc-900/70 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden hover:border-white/10 hover:shadow-[0_0_80px_rgba(250,50,50,0.1)] transition-all duration-500 group"
-              >
+              <div className="w-full bg-gradient-to-br from-zinc-950/70 to-zinc-900/70 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden hover:border-white/10 hover:shadow-[0_0_80px_rgba(250,50,50,0.1)] transition-all duration-500 group">
                 <div className="p-5 lg:p-6 flex flex-col relative">
                   <div className="absolute inset-0 bg-gradient-to-br from-[rgba(250,50,50,0.05)] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
                   <div className="flex items-center gap-3 mb-3 relative z-10">
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/20 flex items-center justify-center shrink-0 transition-all duration-300">
                       {renderIcon(currentFeatureIndex)}
                     </div>
-                    <h3 className="text-white font-semibold text-xl lg:text-2xl group-hover:text-orange-100 transition-colors duration-300">{currentFeature.title}</h3>
+                    <h3 className="text-white font-semibold text-xl lg:text-2xl group-hover:text-orange-100 transition-colors duration-300">
+                      {currentFeature.title}
+                    </h3>
+                    <PlatformBadge platform={currentFeature.platform} />
                   </div>
-                  <p className="text-white/70 text-sm lg:text-base leading-relaxed group-hover:text-white/80 transition-colors duration-300 relative z-10">{currentFeature.description}</p>
+                  <p className="text-white/70 text-sm lg:text-base leading-relaxed group-hover:text-white/80 transition-colors duration-300 relative z-10">
+                    {currentFeature.description}
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -239,80 +204,6 @@ export default function Features({ onOpen }: FeaturesProps) {
           </div>
         </div>
       </div>
-
-      {/* Modal for feature details */}
-      {!onOpen && (
-        <>
-      <AnimatePresence>
-        {active && typeof active === "object" && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/40 h-full w-full z-10"
-              />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {active && typeof active === "object" ? (
-          <div className="fixed inset-0 grid place-items-center z-100">
-            <motion.div
-              layoutId={`card-${active.title}-${id}`}
-              ref={ref}
-              className="w-[96%] max-w-[840px] h-full md:h-fit md:max-h-[92%] flex flex-col bg-zinc-950/95 backdrop-blur-xl border border-white/10 sm:rounded-3xl overflow-hidden shadow-2xl"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={{ duration: 0.18, ease: "easeOut" }}
-            >
-              <motion.div layout className="w-full bg-zinc-900/50 p-4 md:p-6">
-                <div className="relative w-full aspect-video rounded-xl overflow-hidden">
-                  <img
-                    src={active.src ?? "/image.png"}
-                    alt={active.title}
-                    className="absolute inset-0 w-full h-full object-contain object-center"
-                  />
-                </div>
-              </motion.div>
-              <div className="flex flex-col">
-                <div className="p-6 md:p-8 flex items-start gap-4 border-b border-white/10">
-                  <div className="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center">
-                        {renderIcon(features.findIndex((f) => f.title === active.title))}
-                  </div>
-                  <div className="flex-1">
-                        <motion.h3
-                          layoutId={`title-${active.title}-${id}`}
-                          className="text-white text-2xl font-medium leading-tight"
-                        >
-                          {active.title}
-                        </motion.h3>
-                        <motion.p
-                          layoutId={`description-${active.description}-${id}`}
-                          className="text-white/70 text-base mt-2"
-                        >
-                          {active.description}
-                        </motion.p>
-                  </div>
-                </div>
-                <div className="p-6 md:p-8">
-                      <motion.div
-                        layout
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="text-white/80 text-sm md:text-base leading-relaxed"
-                      >
-                    {active.description}
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        ) : null}
-      </AnimatePresence>
-        </>
-      )}
     </section>
   );
 }

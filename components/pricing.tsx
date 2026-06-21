@@ -9,51 +9,55 @@ type Plan = {
   description: string;
   features: string[];
   cta: string;
+  href: string;
   highlight?: boolean;
   originalPrice?: string;
-  isContact?: boolean;
 };
 
 const plans: Plan[] = [
   {
-    name: "Free Demo",
+    name: "Free",
     price: "$0",
-    description: "Great for trying out Yuki and for tiny teams",
+    description: "Open source, run it yourself",
     features: [
       "Full access to all features",
-      "Limited usage time",
-      "Perfect for testing",
+      "macOS and Windows",
+      "Community support",
+      "Bring your own AI key",
     ],
-    cta: "Start for Free",
+    cta: "Download Free",
+    href: "#download",
   },
   {
     name: "Full Access",
     price: "$49",
     originalPrice: "$69",
-    description: "One-time fee, lifetime updates",
+    description: "One-time payment, lifetime updates",
     features: [
-      "Unlimited everything",
-      "All updates included",
-      "Premium support",
-      "Lifetime access",
+      "Everything in Free",
+      "Pre-built installer",
+      "Priority support",
+      "Lifetime updates",
+      "Early access to new features",
     ],
-    cta: "Buy now",
+    cta: "Buy Now",
+    href: "https://rzp.io/rzp/NuYjrpJa",
     highlight: true,
   },
   {
     name: "Enterprise",
-    price: "$$$",
-    description: "For large teams and organizations",
+    price: "Custom",
+    description: "For teams and organizations",
     features: [
       "Everything in Full Access",
-      "Dedicated account manager",
+      "Dedicated support",
       "Custom integrations",
-      "Priority support",
       "SLA guarantees",
-      "Custom deployment options",
+      "Volume licensing",
+      "Custom deployment",
     ],
     cta: "Contact Sales",
-    isContact: true,
+    href: "mailto:sales@yukiai.com?subject=Enterprise Inquiry",
   },
 ];
 
@@ -68,7 +72,7 @@ export default function Pricing() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 
+          <h2
             className="text-5xl sm:text-6xl lg:text-7xl font-normal text-white mb-2"
             style={{
               textShadow: '0 0 6px rgba(251,50,50,0.9), 0 0 14px rgba(251,50,50,0.9)',
@@ -76,7 +80,7 @@ export default function Pricing() {
           >
             Pricing
           </h2>
-          <p className="text-white/70 text-2xl max-w-5xl mx-auto font-thin mb-20">Simple plans that grow with you</p>
+          <p className="text-white/70 text-xl sm:text-2xl max-w-5xl mx-auto font-thin mb-20">Simple plans that grow with you</p>
         </motion.div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-6 lg:gap-10 max-w-7xl mx-auto flex-wrap px-4 sm:px-0">
@@ -84,30 +88,24 @@ export default function Pricing() {
             <motion.div
               key={plan.name}
               className={`rounded-3xl border backdrop-blur-2xl relative overflow-hidden shadow-[0_20px_60px_0_rgba(0,0,0,0.5)] w-full max-w-sm sm:max-w-none sm:w-[300px] lg:w-[360px] min-h-[500px] sm:min-h-[550px] lg:min-h-[600px] group ${
-                plan.highlight 
-                  ? "border-[rgba(251,50,50,0.4)] z-10" 
-                  : plan.isContact
-                  ? "border-white/20 hover:border-white/30"
+                plan.highlight
+                  ? "border-[rgba(251,50,50,0.4)] z-10"
                   : "border-white/15 hover:border-white/25"
               }`}
               initial={{ opacity: 0, y: 30, scale: 1 }}
               whileInView={{ opacity: 1, y: 0, scale: plan.highlight ? 1.05 : 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ 
+              whileHover={{
                 scale: plan.highlight ? 1.08 : 1.02,
                 transition: { duration: 0.1, ease: "easeOut" }
               }}
               style={{
                 background: plan.highlight
                   ? "linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.6) 100%)"
-                  : plan.isContact
-                  ? "linear-gradient(to bottom, rgba(255,255,255,0.10) 0%, rgba(0,0,0,0.6) 100%)"
                   : "linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.6) 100%)",
                 boxShadow: plan.highlight
                   ? "0 20px 60px 0 rgba(0,0,0,0.6), 0 0 50px 15px rgba(251,50,50,0.4), inset 0 1px 0 0 rgba(255,255,255,0.1)"
-                  : plan.isContact
-                  ? "0 20px 60px 0 rgba(0,0,0,0.5), 0 0 30px 8px rgba(255,255,255,0.1), inset 0 1px 0 0 rgba(255,255,255,0.08)"
                   : "0 20px 60px 0 rgba(0,0,0,0.5), inset 0 1px 0 0 rgba(255,255,255,0.05)",
               }}
             >
@@ -136,12 +134,8 @@ export default function Pricing() {
                           <span className="text-white/40 text-lg sm:text-xl lg:text-2xl line-through">{plan.originalPrice}</span>
                         )}
                         <span className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">{plan.price}</span>
-                        {!plan.isContact && (
-                          plan.highlight ? (
-                            <span className="text-white/60 text-xs sm:text-sm lg:text-base">one-time</span>
-                          ) : (
-                            <span className="text-white/60 text-xs sm:text-sm lg:text-base">/month</span>
-                          )
+                        {plan.highlight && (
+                          <span className="text-white/60 text-xs sm:text-sm lg:text-base">one-time</span>
                         )}
                       </div>
                     </div>
@@ -150,31 +144,20 @@ export default function Pricing() {
                 </div>
 
                 {/* CTA Button */}
-                <motion.button
+                <motion.a
+                  href={plan.href}
+                  target={plan.href.startsWith("http") ? "_blank" : undefined}
+                  rel={plan.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    if (plan.isContact) {
-                      // Scroll to footer (where contact info is)
-                      const footer = document.querySelector('footer');
-                      if (footer) {
-                        footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      } else {
-                        // Fallback: open mailto
-                        window.location.href = 'mailto:sales@yukiai.com?subject=Enterprise Inquiry';
-                      }
-                    }
-                  }}
-                  className={`w-full rounded-full px-4 py-2.5 sm:px-5 sm:py-3 text-base sm:text-lg font-normal transition-all duration-300 mb-4 sm:mb-6 lg:mb-8 ${
-                    plan.isContact
-                      ? "bg-zinc-950/10 text-white hover:bg-zinc-950/30 border border-white/30 shadow-lg shadow-[rgba(251,50,50,0.4)] hover:shadow-xl hover:shadow-[rgba(251,50,50,0.5)]"
-                      : plan.highlight
+                  className={`w-full rounded-full px-4 py-2.5 sm:px-5 sm:py-3 text-base sm:text-lg font-normal transition-all duration-300 mb-4 sm:mb-6 lg:mb-8 text-center block ${
+                    plan.highlight
                       ? "bg-zinc-950/10 text-white hover:bg-zinc-950/30 border border-white/30 shadow-lg shadow-[rgba(251,50,50,0.4)] hover:shadow-xl hover:shadow-[rgba(251,50,50,0.5)]"
                       : "bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 border border-white/10 hover:border-white/20"
                   }`}
                 >
                   {plan.cta}
-                </motion.button>
+                </motion.a>
 
                 {/* Features Separator */}
                 <div className="relative mb-6">
@@ -191,8 +174,8 @@ export default function Pricing() {
                 {/* Features List */}
                 <ul className="space-y-2.5 sm:space-y-3 lg:space-y-4 flex-1">
                   {plan.features.map((feature, idx) => (
-                    <motion.li 
-                      key={feature} 
+                    <motion.li
+                      key={feature}
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
@@ -214,5 +197,3 @@ export default function Pricing() {
     </section>
   );
 }
-
-
