@@ -6,11 +6,11 @@ import { ArrowRightIcon, X, Menu } from "lucide-react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
-const navItems = ["Services", "Download", "Pricing", "How It Works", "FAQ"];
+const navItems = ["Features", "Download", "Pricing", "How It Works", "FAQ"];
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>("services");
+  const [activeSection, setActiveSection] = useState<string>("features");
   const [scrolled, setScrolled] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -273,17 +273,16 @@ export default function Navbar() {
                 transition={{ type: "tween" }}
               >
                 <Image
-                  src="/logowithoutbg.svg"
-                  alt="Yuki AI Logo"
-                  width={45}
-                  height={45}
-                  className="text-white rounded-full"
+                  src="/logo-mark.svg"
+                  alt="Yuki logo"
+                  width={40}
+                  height={40}
                 />
               </motion.div>
-              <motion.span 
+              <motion.span
                 className="text-white font-thin text-xl tracking-tight"
               >
-                YukiAI
+                Yuki
               </motion.span>
             </motion.button>
 
@@ -336,11 +335,11 @@ export default function Navbar() {
               transition={{ duration: 0.35, delay: 0.3 }}
             >
               <HoverBorderGradient as="button" onClick={() => {
-                const el = document.getElementById("pricing");
+                const el = document.getElementById("download");
                 if (el) {
                   isScrollingRef.current = true;
                   setIsScrolling(true);
-                  setActiveSection("pricing");
+                  setActiveSection("download");
                   el.scrollIntoView({ behavior: "smooth" });
                   if (scrollTimeoutRef.current) {
                     clearTimeout(scrollTimeoutRef.current);
@@ -356,7 +355,7 @@ export default function Navbar() {
                   whileHover={{ x: 4 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  Plans and Pricing
+                  Get Yuki Free
                   <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </motion.div>
               </HoverBorderGradient>
@@ -467,11 +466,11 @@ export default function Navbar() {
                   transition={{ delay: 0.3 }}
                 >
                   <HoverBorderGradient as="button" className="w-full" onClick={() => {
-                    const el = document.getElementById("pricing");
+                    const el = document.getElementById("download");
                     if (el) {
                       isScrollingRef.current = true;
                       setIsScrolling(true);
-                      setActiveSection("pricing");
+                      setActiveSection("download");
                       el.scrollIntoView({ behavior: "smooth" });
                       setMobileMenuOpen(false);
                       if (scrollTimeoutRef.current) {
@@ -488,7 +487,7 @@ export default function Navbar() {
                       whileHover={{ x: 4 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      Plans and Pricing
+                      Get Yuki Free
                       <ArrowRightIcon className="w-5 h-5" />
                     </motion.div>
                   </HoverBorderGradient>

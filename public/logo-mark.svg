@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="544" height="672" viewBox="240 176 544 672" xmlns="http://www.w3.org/2000/svg">
+  <!-- Yuki snowflake-Y mark, transparent background. Frost whites/blues,
+       tuned to read on dark surfaces. -->
+  <defs>
+    <linearGradient id="mark" gradientUnits="userSpaceOnUse"
+                    x1="512" y1="280" x2="512" y2="800">
+      <stop offset="0%" stop-color="#f4f9ff"/>
+      <stop offset="100%" stop-color="#c9e0f6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- soft glow under the Y (translucent wide strokes, no filters) -->
+  <g stroke="#8ec1ee" stroke-linecap="round" fill="none" opacity="0.16">
+    <path d="M 512 512 L 348 322" stroke-width="130"/>
+    <path d="M 512 512 L 676 322" stroke-width="130"/>
+    <path d="M 512 512 L 512 764" stroke-width="130"/>
+  </g>
+
+  <!-- light spokes completing the snowflake: up, down-left, down-right -->
+  <g stroke="#8fbbe4" stroke-width="26" stroke-linecap="round" fill="none" opacity="0.9">
+    <path d="M 512 470 L 512 276"/>
+    <path d="M 476 538 L 314 632"/>
+    <path d="M 548 538 L 710 632"/>
+  </g>
+  <g fill="#bcd8f1" opacity="0.95">
+    <circle cx="512" cy="246" r="16"/>
+    <circle cx="288" cy="647" r="16"/>
+    <circle cx="736" cy="647" r="16"/>
+  </g>
+
+  <!-- the Y -->
+  <g stroke="url(#mark)" stroke-width="66" stroke-linecap="round" fill="none">
+    <path d="M 512 512 L 348 322"/>
+    <path d="M 512 512 L 676 322"/>
+    <path d="M 512 512 L 512 764"/>
+  </g>
+
+  <!-- center crystal -->
+  <circle cx="512" cy="512" r="30" fill="#f4f9ff"/>
+</svg>
