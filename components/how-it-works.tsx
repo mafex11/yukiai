@@ -2,23 +2,26 @@
 
 import { motion } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { AiVoiceIcon, Brain02Icon, AccelerationIcon } from "@hugeicons/core-free-icons";
+import { CommandLineIcon, Loading03Icon, Brain02Icon } from "@hugeicons/core-free-icons";
 
 const steps = [
   {
-    title: "Wake word or hotkey",
-    description: "Say \"Yuki\" or press a keyboard shortcut to activate the assistant.",
-    icon: AiVoiceIcon,
+    title: "Press ⌘⇧A and ask",
+    description:
+      "A command bar drops down wherever you are. Tell it what you want in plain words — no syntax, no setup — and it gets to work.",
+    icon: CommandLineIcon,
   },
   {
-    title: "Understands intent",
-    description: "Parses your command, chooses the right tools, and plans the execution steps.",
+    title: "Watch the pill, stay in control",
+    description:
+      "The activity pill narrates each step with a live progress bar. Hit STOP anytime, answer its questions mid-task, or just touch the mouse — Yuki pauses instantly.",
+    icon: Loading03Icon,
+  },
+  {
+    title: "It gets more yours over time",
+    description:
+      "Yuki learns your apps, music, and routines locally, keeping editable notes in ~/YukiVault. The more you use it, the less you have to explain.",
     icon: Brain02Icon,
-  },
-  {
-    title: "Automates your device",
-    description: "Controls apps natively using OS accessibility APIs — fast, reliable, no screenshots needed.",
-    icon: AccelerationIcon,
   },
 ];
 
@@ -41,7 +44,7 @@ export default function HowItWorks() {
           >
             How it works
           </h2>
-          <p className="text-white/70 text-xl sm:text-2xl max-w-5xl mx-auto font-thin mb-20">From voice to action in three steps</p>
+          <p className="text-white/70 text-xl sm:text-2xl max-w-5xl mx-auto font-thin mb-20">From a sentence to a finished task in three steps</p>
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {steps.map((s, i) => (
@@ -56,8 +59,11 @@ export default function HowItWorks() {
             >
               <div className="absolute inset-0 bg-gradient-to-br from-[rgba(251,50,50,0.5)] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
               <div className="relative z-10">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/20 group-hover:border-[rgba(251,50,50,0.5)] flex items-center justify-center mb-6 transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(251,50,50,0.5)]">
-                  <HugeiconsIcon icon={s.icon} size={28} color="white" className="group-hover:scale-110 transition-transform duration-300" />
+                <div className="flex items-center justify-between mb-6">
+                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/20 group-hover:border-[rgba(251,50,50,0.5)] flex items-center justify-center transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(251,50,50,0.5)]">
+                    <HugeiconsIcon icon={s.icon} size={28} color="white" className="group-hover:scale-110 transition-transform duration-300" />
+                  </div>
+                  <span className="text-white/20 text-5xl font-thin select-none">{i + 1}</span>
                 </div>
                 <h3 className="text-white text-2xl font-semibold mb-3 group-hover:text-orange-100 transition-colors duration-300">{s.title}</h3>
                 <p className="text-white/70 text-base leading-relaxed group-hover:text-white/80 transition-colors duration-300">{s.description}</p>

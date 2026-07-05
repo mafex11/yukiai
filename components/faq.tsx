@@ -7,28 +7,28 @@ type Qa = { q: string; a: string };
 
 const qas: Qa[] = [
   {
-    q: "What platforms does Yuki support?",
-    a: "Yuki runs natively on macOS (12.0+) and Windows (10/11). Each version is built specifically for its platform — macOS uses Accessibility APIs, Windows uses UI Automation.",
-  },
-  {
-    q: "Does Yuki work offline?",
-    a: "Wake word detection and device control work locally. An AI provider (Google Gemini free tier, Anthropic, or local Ollama) is needed for natural language understanding.",
-  },
-  {
-    q: "How do I install on macOS?",
-    a: "Run `brew install --cask mafex11/tap/yuki` or download the .zip from GitHub releases. On first launch, right-click Yuki.app → Open to bypass Gatekeeper.",
-  },
-  {
-    q: "How do I install on Windows?",
-    a: "Clone the repository from GitHub and run with Python 3.12+. The frontend connects to the local API server automatically.",
-  },
-  {
     q: "Is my data private?",
-    a: "Commands run entirely on your device. No keystrokes are stored externally; conversation logs are opt-in and local.",
+    a: "Yes. Yuki observes your app usage, music, and rhythm entirely on your Mac and distills it into plain markdown notes in ~/YukiVault that you can read and edit. Raw activity never leaves the machine — only small aggregated summaries reach the AI provider. You can turn observation off entirely with YUKI_OBSERVER=0.",
   },
   {
-    q: "Can I trigger actions with a hotkey?",
-    a: "Yes. macOS uses ⌘⇧A by default. On Windows, configure any global hotkey to start/stop listening.",
+    q: "What can Yuki actually control?",
+    a: "It has direct control of Spotify, Apple Music, your browser, Mail, Messages, Notes, Calendar, and Reminders, plus full GUI control of any app through the macOS accessibility tree — element-level clicking, no screenshots. Follow-ups work too: say \"actually skip this song\" and it just does.",
+  },
+  {
+    q: "What AI does it use? Do I need an API key?",
+    a: "Yuki defaults to Google Gemini, which has a free tier — bring your own key. You can also use Anthropic, or run fully local with Ollama and no key at all.",
+  },
+  {
+    q: "Can I stop it mid-task?",
+    a: "Always. The activity pill shows every step in plain words with a STOP button, and Yuki pauses instantly the moment you touch the mouse or keyboard — then asks whether to resume or stop. It can also ask you questions mid-task when it needs a decision.",
+  },
+  {
+    q: "Why does it need Accessibility permission?",
+    a: "Accessibility is how Yuki reads the screen — the same API VoiceOver uses. It lets Yuki see buttons, fields, and menus as structured elements and click them precisely, instead of taking screenshots and guessing at pixels.",
+  },
+  {
+    q: "Is Yuki open source?",
+    a: "Yes — free and MIT licensed. The full source is on GitHub at github.com/mafex11/yuki-mac-use, and the latest release is v0.5.0. Install it with: brew tap mafex11/tap && brew install --cask yuki.",
   },
 ];
 
