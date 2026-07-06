@@ -71,73 +71,15 @@ export default function TaskPillDemo() {
       className="relative w-full max-w-2xl mx-auto"
       aria-label="Demo of a Yuki task: play my japanese playlist"
     >
-      {/* A ribbon of light crossing behind the pane: sharp-ish outside the
-          window, frosted and brightened where the glass covers it — the
-          thing that makes the material read as glass at a glance. */}
-      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-        <motion.div
-          className="absolute left-[-14%] right-[-14%] top-[34%] h-36 -rotate-[7deg] rounded-full"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(56,140,255,0.85) 0%, rgba(150,110,255,0.8) 45%, rgba(45,212,235,0.8) 100%)",
-            filter: "blur(18px)",
-          }}
-          animate={reducedMotion ? undefined : { x: ["-3%", "3%", "-3%"] }}
-          transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute left-[-10%] right-[-10%] top-[58%] h-16 -rotate-[7deg] rounded-full opacity-70"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(45,212,235,0.8) 0%, rgba(56,140,255,0.8) 60%, rgba(150,110,255,0.75) 100%)",
-            filter: "blur(14px)",
-          }}
-          animate={reducedMotion ? undefined : { x: ["2.5%", "-2.5%", "2.5%"] }}
-          transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </div>
       <div
-        className="liquid-glass relative rounded-[28px] text-left"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.045))",
-          border: "1px solid rgba(255,255,255,0.42)",
-          boxShadow: [
-            "0 30px 80px rgba(0,0,0,0.6)",
-            "0 1px 0 rgba(255,255,255,0.15)",
-          ].join(", "),
-        }}
+        className="relative rounded-2xl text-left overflow-hidden border border-white/10 bg-[#101216]/95 shadow-[0_24px_70px_rgba(0,0,0,0.55)]"
       >
-        {/* the frosting: blur + saturate + brighten what passes behind */}
-        <div
-          className="pointer-events-none absolute inset-0 rounded-[28px] overflow-hidden"
-          style={{
-            backdropFilter: "blur(22px) saturate(1.9) brightness(1.18)",
-            WebkitBackdropFilter: "blur(22px) saturate(1.9) brightness(1.18)",
-          }}
-        />
-        {/* inner shine: bright rim along top+bottom inner edges */}
-        <div
-          className="pointer-events-none absolute inset-0 rounded-[28px] z-10"
-          style={{
-            boxShadow:
-              "inset 2px 2px 1px -2px rgba(255,255,255,0.9), inset -2px -2px 1px -2px rgba(255,255,255,0.75), inset 0 -10px 24px -18px rgba(255,255,255,0.8)",
-          }}
-        />
-        {/* specular sweep across the top of the glass */}
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-28 z-10 rounded-t-[28px]"
-          style={{
-            background:
-              "linear-gradient(115deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.05) 38%, transparent 60%)",
-          }}
-        />
         {/* title bar */}
-        <div className="relative z-20 flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.18] bg-white/[0.06]">
+        <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.07] bg-white/[0.03]">
           <span className="h-3 w-3 rounded-full bg-[#ff5f57]/90" />
           <span className="h-3 w-3 rounded-full bg-[#febc2e]/90" />
           <span className="h-3 w-3 rounded-full bg-[#28c840]/90" />
-          <span className="ml-3 text-[12px] text-white/60 select-none">Yuki</span>
+          <span className="ml-3 text-[12px] text-white/40 select-none">Yuki</span>
           <span className="ml-auto flex items-center gap-1 select-none">
             {["⌘", "⇧", "A"].map((k) => (
               <kbd
@@ -151,7 +93,7 @@ export default function TaskPillDemo() {
         </div>
 
         {/* conversation area — fixed height so the window never jumps */}
-        <div className="relative z-20 px-4 sm:px-5 py-4 h-[176px] sm:h-[188px] flex flex-col justify-end gap-2 overflow-hidden">
+        <div className="px-4 sm:px-5 py-4 h-[176px] sm:h-[188px] flex flex-col justify-end gap-2 overflow-hidden">
           <AnimatePresence initial={false}>
             {shownRows.map((row, i) => (
               <motion.div
@@ -163,16 +105,7 @@ export default function TaskPillDemo() {
               >
                 {row.kind === "user" && (
                   <div className="flex justify-end">
-                    <span
-                      className="rounded-2xl rounded-br-md px-3.5 py-2 text-sm text-sky-50/95"
-                      style={{
-                        background: "rgba(127,180,232,0.16)",
-                        border: "1px solid rgba(210,232,252,0.45)",
-                        boxShadow: "inset 0 2px 6px rgba(255,255,255,0.22)",
-                        backdropFilter: "blur(8px)",
-                        WebkitBackdropFilter: "blur(8px)",
-                      }}
-                    >
+                    <span className="rounded-xl rounded-br-sm bg-sky-500/15 border border-sky-300/25 px-3.5 py-2 text-sm text-sky-100/95">
                       {row.text}
                     </span>
                   </div>
@@ -192,21 +125,12 @@ export default function TaskPillDemo() {
                         }`}
                       />
                     )}
-                    <span className="text-[13px] text-white/85" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>{row.text}</span>
+                    <span className="text-[13px] text-white/60">{row.text}</span>
                   </div>
                 )}
                 {row.kind === "reply" && (
                   <div className="flex justify-start">
-                    <span
-                      className="rounded-2xl rounded-bl-md px-3.5 py-2 text-sm text-white/90 leading-relaxed max-w-[85%]"
-                      style={{
-                        background: "rgba(255,255,255,0.08)",
-                        border: "1px solid rgba(255,255,255,0.35)",
-                        boxShadow: "inset 0 2px 6px rgba(255,255,255,0.18)",
-                        backdropFilter: "blur(8px)",
-                        WebkitBackdropFilter: "blur(8px)",
-                      }}
-                    >
+                    <span className="rounded-xl rounded-bl-sm bg-white/[0.06] border border-white/10 px-3.5 py-2 text-sm text-white/85 leading-relaxed max-w-[85%]">
                       {row.text}
                     </span>
                   </div>
@@ -217,7 +141,7 @@ export default function TaskPillDemo() {
         </div>
 
         {/* input row */}
-        <div className="relative z-20 flex items-center gap-3 px-4 sm:px-5 py-3 border-t border-white/[0.18] bg-white/[0.05]">
+        <div className="flex items-center gap-3 px-4 sm:px-5 py-3 border-t border-white/[0.07] bg-white/[0.03]">
           <span className="text-sky-300/80 font-mono text-sm select-none">❯</span>
           {visible < 0 && !reducedMotion ? (
             <span className="flex-1 font-mono text-sm text-white/90 truncate">
@@ -230,14 +154,7 @@ export default function TaskPillDemo() {
             </span>
           )}
           {running ? (
-            <span
-              className="flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-wider text-red-200/95 select-none"
-              style={{
-                background: "linear-gradient(135deg, rgba(255,90,90,0.28), rgba(255,90,90,0.12))",
-                border: "1px solid rgba(255,140,140,0.30)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.20)",
-              }}
-            >
+            <span className="flex shrink-0 items-center gap-1.5 rounded-md border border-red-400/25 bg-red-500/10 px-2 py-1 text-[10px] font-semibold tracking-wider text-red-300/90 select-none">
               <Square className="h-2 w-2 fill-current" />
               STOP
             </span>

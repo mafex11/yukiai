@@ -43,27 +43,15 @@ export default function HeroBackground({ children }: HeroBackgroundProps) {
         }
       }}
     >
-      {/* Laser Layer — clipped + masked so the beam pours INTO the app
-          window in the hero instead of running the full page height. */}
-      <div
-        className="hidden md:block absolute inset-x-0 top-0 pointer-events-none"
-        style={{
-          height: "58%",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
-          maskImage:
-            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
-        }}
-      >
-        <LaserFlow
-          className=""
-          style={{ height: "172%" }}
-          dpr={typeof window !== "undefined" ? Math.min(window.devicePixelRatio || 1, 2) : 1}
-          horizontalBeamOffset={0.0}
-          verticalBeamOffset={-0.0}
-          color="#7FB4E8"
-        />
-      </div>
+      {/* Laser Layer */}
+      <LaserFlow
+        className="hidden md:block"
+        style={{}}
+        dpr={typeof window !== "undefined" ? Math.min(window.devicePixelRatio || 1, 2) : 1}
+        horizontalBeamOffset={0.0}
+        verticalBeamOffset={-0.0}
+        color="#7FB4E8"
+      />
 
       {/* Glow Layer (optional, makes the grid glow softly) */}
       <div
