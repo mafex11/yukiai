@@ -83,21 +83,11 @@ export default function Hero() {
               ))}
             </motion.p>
 
-            {/* Live task lifecycle demo: command bar -> activity pill */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.1 }}
-              className="w-full px-6 mb-8"
-            >
-              <TaskPillDemo />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 1.3 }}
-              className="flex flex-col items-center gap-4 justify-center w-full"
+              transition={{ duration: 0.4, delay: 1.0 }}
+              className="flex flex-col items-center gap-4 justify-center w-full mb-10"
             >
               <div className="flex items-center gap-3 sm:gap-4">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -137,6 +127,17 @@ export default function Hero() {
               <p className="text-white/50 text-sm font-light">
                 Free &amp; open source · macOS 13+ · Apple Silicon · v0.5.0
               </p>
+            </motion.div>
+
+            {/* The app itself, where the beam lands: one window playing a
+                full task — type, steps narrate, answer. */}
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full px-6"
+            >
+              <TaskPillDemo />
             </motion.div>
           </motion.div>
         </div>
