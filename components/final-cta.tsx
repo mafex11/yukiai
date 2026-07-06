@@ -10,7 +10,7 @@ export default function FinalCTA() {
         <h3
           className="text-white text-5xl sm:text-6xl lg:text-7xl font-normal mb-2"
           style={{
-            textShadow: '0 0 6px rgba(251,50,50,0.9), 0 0 14px rgba(251,50,50,0.9)',
+            textShadow: '0 0 6px rgba(127,180,232,0.9), 0 0 14px rgba(127,180,232,0.9)',
           }}
         >
           Your Mac is one sentence away
@@ -23,7 +23,7 @@ export default function FinalCTA() {
           <Button
             variant="default"
             asChild
-            className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group text-sm sm:text-base"
+            className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-sky-950/40 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(180,215,245,0.5)] transition-all duration-300 flex items-center gap-2 group text-sm sm:text-base"
           >
             <a href="#download">
               <Apple className="w-5 h-5" />
@@ -34,7 +34,7 @@ export default function FinalCTA() {
           <Button
             variant="outline"
             asChild
-            className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group text-sm sm:text-base"
+            className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(180,215,245,0.5)] transition-all duration-300 flex items-center gap-2 group text-sm sm:text-base"
           >
             <a href="https://github.com/mafex11/yuki-mac-use" target="_blank" rel="noopener noreferrer">
               <Github className="w-5 h-5" />

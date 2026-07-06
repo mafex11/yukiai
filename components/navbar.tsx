@@ -225,7 +225,7 @@ export default function Navbar() {
     <>
       {/* Scroll progress bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-900 to-red-500 z-[100] origin-left"
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-900 to-sky-400 z-[100] origin-left"
         style={{ scaleX: scrollYProgress }}
       />
 
@@ -248,7 +248,7 @@ export default function Navbar() {
             backdropFilter: `blur(${navbarStyles.backdropBlur}px)`,
             backgroundColor: `rgba(24, 24, 27, ${navbarStyles.backgroundOpacity})`,
             borderColor: `rgba(39, 39, 42, ${navbarStyles.borderOpacity})`,
-            boxShadow: `0 8px 30px rgba(0, 0, 0, ${navbarStyles.shadowOpacity * 0.3}), 0 0 300px 10px rgba(250, 50, 50, 0.8)`,
+            boxShadow: `0 8px 30px rgba(0, 0, 0, ${navbarStyles.shadowOpacity * 0.3}), 0 0 120px 4px rgba(127, 180, 232, 0.25)`,
           }}
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -311,7 +311,7 @@ export default function Navbar() {
                 >
                   <span>{link}</span>
                   <motion.span
-                    className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-red-500 to-red-600"
+                    className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-sky-400 to-sky-500"
                     initial={false}
                     animate={{ 
                       width: activeSection === link.toLowerCase().replace(/\s+/g, "-") ? "100%" : "0%",
@@ -448,7 +448,7 @@ export default function Navbar() {
                       {link}
                       {isActive && (
                         <motion.span
-                          className="absolute bottom-1 right-0 h-0.5 w-full bg-gradient-to-l from-red-500 to-red-600"
+                          className="absolute bottom-1 right-0 h-0.5 w-full bg-gradient-to-l from-sky-400 to-sky-500"
                           initial={{ width: 0, opacity: 0 }}
                           animate={{ width: "100%", opacity: 1 }}
                           transition={{ duration: 0.3, ease: "easeInOut" }}

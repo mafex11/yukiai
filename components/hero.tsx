@@ -33,7 +33,7 @@ const wordVariants = {
 };
 
 const SUBHEAD =
-  "Press ⌘⇧A and say what you want. Yuki does it through the apps themselves — reading the screen the way VoiceOver does, narrating every step, and learning who you are without your data ever leaving the Mac.";
+  "Press ⌘⇧A, say what you want, and watch it happen — step by step, with a stop button.";
 
 export default function Hero() {
   return (
@@ -62,19 +62,19 @@ export default function Hero() {
             <div className="w-full flex justify-center px-3 mb-4">
               <TextGenerateEffect
                 words="Your Mac, on a first-name basis"
-                className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-normal text-white text-center max-w-5xl"
+                className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight text-white text-center max-w-5xl"
                 duration={0.5}
                 staggerDelay={0.02}
                 byChar
                 glow
-                glowColor="rgba(251,50,50,0.9)"
+                glowColor="rgba(127,180,232,0.45)"
               />
             </div>
             <motion.p
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="text-lg sm:text-xl lg:text-2xl font-thin text-white/80 text-center px-6 mb-8 max-w-3xl leading-relaxed"
+              className="text-base sm:text-lg lg:text-xl font-light text-white/70 text-center px-6 mb-10 max-w-2xl leading-relaxed"
             >
               {SUBHEAD.split(" ").map((word, index) => (
                 <motion.span key={index} variants={wordVariants} className="inline-block mr-1.5">
@@ -104,7 +104,7 @@ export default function Hero() {
                   <Button
                     variant="default"
                     asChild
-                    className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-orange-950/50 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden text-sm sm:text-base"
+                    className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-sky-950/40 backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(180,215,245,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden text-sm sm:text-base"
                   >
                     <a href="#download">
                       <HugeiconsIcon
@@ -120,7 +120,7 @@ export default function Hero() {
                   <Button
                     variant="outline"
                     asChild
-                    className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,180,120,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden text-sm sm:text-base"
+                    className="h-12 px-4 sm:h-14 sm:px-7 rounded-full bg-transparent backdrop-blur-xl border border-white/40 text-white hover:bg-white/90 hover:text-black hover:border-white/60 hover:shadow-[0_0_30px_rgba(180,215,245,0.5)] transition-all duration-300 flex items-center gap-2 group overflow-hidden text-sm sm:text-base"
                   >
                     <a
                       href="https://github.com/mafex11/yuki-mac-use"

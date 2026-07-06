@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Apple, Terminal, ExternalLink, Check, Copy, Github } from "lucide-react";
+import SectionHeader from "./section-header";
 
 const BREW_COMMAND = "brew tap mafex11/tap && brew install --cask yuki";
 const RELEASES_URL = "https://github.com/mafex11/yuki-mac-use/releases/tag/v0.5.0";
@@ -22,32 +23,26 @@ export default function DownloadSection() {
   };
 
   return (
-    <section id="download" className="w-full bg-black py-20 sm:py-32 relative overflow-hidden">
+    <section id="download" className="w-full bg-black py-24 sm:py-28 relative overflow-hidden">
       <div
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
-          background: `radial-gradient(circle at center, rgba(244, 63, 94, 0.12) 20%, rgba(244, 63, 94, 0.06) 50%, rgba(0, 0, 0, 0.0) 80%)`,
+          background: `radial-gradient(circle at center, rgba(127, 180, 232, 0.12) 20%, rgba(127, 180, 232, 0.06) 50%, rgba(0, 0, 0, 0.0) 80%)`,
         }}
       />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          className="text-center mb-16"
+          className="text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2
-            className="text-5xl sm:text-6xl lg:text-7xl font-normal text-white mb-2"
-            style={{
-              textShadow: '0 0 6px rgba(251,50,50,0.9), 0 0 14px rgba(251,50,50,0.9)',
-            }}
-          >
-            Get Yuki
-          </h2>
-          <p className="text-white/70 text-xl sm:text-2xl max-w-5xl mx-auto font-thin">
-            One command. Free &amp; open source.
-          </p>
+          <SectionHeader
+            eyebrow="Install"
+            title="One command, and it's yours"
+            sub="Free & open source. Homebrew handles the rest."
+          />
         </motion.div>
 
         <motion.div
@@ -55,17 +50,17 @@ export default function DownloadSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-950/60 p-6 sm:p-8 backdrop-blur-xl hover:border-[rgba(251,50,50,0.4)] hover:shadow-[0_20px_45px_rgba(251,50,50,0.15)] transition-all duration-500 group relative overflow-hidden"
+          className="rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-950/60 p-6 sm:p-8 backdrop-blur-xl hover:border-[rgba(127,180,232,0.4)] hover:shadow-[0_20px_45px_rgba(127,180,232,0.15)] transition-all duration-500 group relative overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-[rgba(251,50,50,0.05)] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[rgba(127,180,232,0.05)] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
           <div className="relative z-10">
             {/* Header */}
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/20 group-hover:border-[rgba(251,50,50,0.5)] flex items-center justify-center transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(251,50,50,0.3)]">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/20 group-hover:border-[rgba(127,180,232,0.5)] flex items-center justify-center transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(127,180,232,0.3)]">
                 <Apple className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h3 className="text-white text-2xl font-semibold group-hover:text-orange-100 transition-colors duration-300">
+                <h3 className="text-white text-2xl font-semibold group-hover:text-sky-100 transition-colors duration-300">
                   macOS
                 </h3>
                 <p className="text-white/50 text-sm">macOS 13+ · Apple Silicon · v0.5.0</p>
@@ -99,7 +94,7 @@ export default function DownloadSection() {
                 href={RELEASES_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 rounded-full px-5 py-3 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 border border-white/20 hover:border-[rgba(251,50,50,0.5)] transition-all duration-300 hover:shadow-lg hover:shadow-[rgba(251,50,50,0.2)]"
+                className="flex-1 flex items-center justify-center gap-2 rounded-full px-5 py-3 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 border border-white/20 hover:border-[rgba(127,180,232,0.5)] transition-all duration-300 hover:shadow-lg hover:shadow-[rgba(127,180,232,0.2)]"
               >
                 <span className="font-medium">Release notes — v0.5.0</span>
                 <ExternalLink className="w-4 h-4 opacity-60" />

@@ -85,7 +85,7 @@ export const TextGenerateEffect = ({
   return (
     <div className={cn("font-bold w-full", className)}>
       <div className="mt-4 w-full">
-        <div className="text-white leading-snug tracking-wide w-full break-words">
+        <div className="text-white leading-snug w-full break-words">
           {byChar ? renderChars() : renderWords()}
         </div>
       </div>

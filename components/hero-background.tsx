@@ -50,7 +50,7 @@ export default function HeroBackground({ children }: HeroBackgroundProps) {
         dpr={typeof window !== "undefined" ? Math.min(window.devicePixelRatio || 1, 2) : 1}
         horizontalBeamOffset={0.0}
         verticalBeamOffset={-0.0}
-        color="#FB3232"
+        color="#7FB4E8"
       />
 
       {/* Glow Layer (optional, makes the grid glow softly) */}
@@ -58,7 +58,7 @@ export default function HeroBackground({ children }: HeroBackgroundProps) {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle at center, rgba(251,50,50,0.08) 0%, transparent 70%)",
+            "radial-gradient(circle at center, rgba(127,180,232,0.08) 0%, transparent 70%)",
           mixBlendMode: "screen",
         }}
       />

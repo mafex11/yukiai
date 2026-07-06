@@ -66,7 +66,7 @@ export default function TaskPillDemo() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="absolute inset-x-0 top-0 flex items-center gap-3 rounded-2xl border border-white/15 bg-zinc-950/90 backdrop-blur-xl px-4 sm:px-5 py-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.6),0_0_30px_rgba(251,50,50,0.12)]"
+            className="absolute inset-x-0 top-0 flex items-center gap-3 rounded-2xl border border-white/15 bg-zinc-950/90 backdrop-blur-xl px-4 sm:px-5 py-3.5 shadow-[0_10px_40px_rgba(0,0,0,0.6),0_0_30px_rgba(127,180,232,0.12)]"
           >
             <span className="hidden sm:flex items-center gap-1 shrink-0">
               {["⌘", "⇧", "A"].map((k) => (
@@ -92,7 +92,7 @@ export default function TaskPillDemo() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.96 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="absolute inset-x-0 top-0 rounded-full border border-white/15 bg-zinc-950/90 backdrop-blur-xl px-4 sm:px-5 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.6),0_0_30px_rgba(251,50,50,0.12)] overflow-hidden"
+            className="absolute inset-x-0 top-0 rounded-full border border-white/15 bg-zinc-950/90 backdrop-blur-xl px-4 sm:px-5 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.6),0_0_30px_rgba(127,180,232,0.12)] overflow-hidden"
           >
             <div className="flex items-center gap-3">
               {step.done ? (
@@ -115,7 +115,7 @@ export default function TaskPillDemo() {
                 </motion.span>
               </AnimatePresence>
               {!step.done && (
-                <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-[rgba(251,50,50,0.45)] bg-[rgba(251,50,50,0.12)] px-2.5 py-1 text-[11px] font-medium tracking-wide text-red-300">
+                <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-[rgba(127,180,232,0.45)] bg-[rgba(127,180,232,0.12)] px-2.5 py-1 text-[11px] font-medium tracking-wide text-sky-300">
                   <Square className="h-2.5 w-2.5 fill-current" />
                   STOP
                 </span>
@@ -124,7 +124,7 @@ export default function TaskPillDemo() {
             {/* live step progress bar */}
             <div className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full bg-white/10">
               <motion.div
-                className={`h-full rounded-full ${step.done ? "bg-emerald-400/80" : "bg-gradient-to-r from-red-500 to-red-400"}`}
+                className={`h-full rounded-full ${step.done ? "bg-emerald-400/80" : "bg-gradient-to-r from-sky-400 to-sky-300"}`}
                 initial={reducedMotion ? false : { width: 0 }}
                 animate={{ width: `${step.progress * 100}%` }}
                 transition={{ duration: 0.6, ease: "easeOut" }}

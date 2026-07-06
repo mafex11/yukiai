@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import SectionHeader from "./section-header";
 
 type Qa = { q: string; a: string };
 
@@ -40,26 +41,18 @@ export default function FAQ() {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background:
-            "radial-gradient(ellipse 120% 90% at 50% 0%, rgba(255, 80, 120, 0.12), transparent 80%)",
+            "radial-gradient(ellipse 120% 90% at 50% 0%, rgba(127, 180, 232, 0.10), transparent 80%)",
         }}
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          className="text-center mb-12"
+          className="text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2
-            className="text-5xl sm:text-6xl lg:text-7xl font-normal text-white mb-2"
-            style={{
-              textShadow: '0 0 6px rgba(251,50,50,0.9), 0 0 14px rgba(251,50,50,0.9)',
-            }}
-          >
-            FAQ
-          </h2>
-          <p className="text-white/70 text-xl sm:text-2xl max-w-5xl mx-auto font-thin mb-20">Answers to common questions</p>
+          <SectionHeader eyebrow="FAQ" title="Questions, answered" />
         </motion.div>
         <div className="divide-y divide-white/10 rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-950/80 to-zinc-900/80 backdrop-blur-xl overflow-hidden shadow-2xl">
           {qas.map((item, idx) => {
@@ -76,7 +69,7 @@ export default function FAQ() {
                 transition={{ delay: idx * 0.1 }}
               >
                 <div className="flex items-start justify-between gap-4">
-                  <h3 className="text-white text-lg sm:text-xl font-semibold group-hover:text-orange-100 transition-colors duration-300">{item.q}</h3>
+                  <h3 className="text-white text-lg sm:text-xl font-semibold group-hover:text-sky-100 transition-colors duration-300">{item.q}</h3>
                   <motion.span
                     className="text-white/60 text-2xl font-light flex-shrink-0"
                     animate={{ rotate: isOpen ? 45 : 0 }}
